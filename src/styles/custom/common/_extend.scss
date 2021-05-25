@@ -1,0 +1,19 @@
+%background {
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+%background_100 {
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+%background_cover {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+%shadow_small {
+  box-shadow: 0 1px 4px 0 #00000020;
+}

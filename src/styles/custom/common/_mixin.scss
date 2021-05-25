@@ -1,0 +1,127 @@
+/* ----------MININ---------- */
+@mixin fontInfo($size, $color, $lineHeight, $fontFamily) {
+  font-size: $size;
+  color: $color;
+  line-height: $lineHeight;
+  font-family: $fontFamily;
+}
+
+@mixin gridEqual($minwidth) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($minwidth, 1fr));
+}
+
+@mixin gradient_background($deg, $from_color, $to_color) {
+  background: linear-gradient($deg, $from_color 0%, $to_color 100%);
+  background: -moz-linear-gradient($deg, $from_color 0%, $to_color 100%);
+  background: -webkit-linear-gradient($deg, $from_color 0%, $to_color 100%);
+  background: -o-linear-gradient($deg, $from_color 0%, $to_color 100%);
+}
+@mixin gradient_border_bottom($width, $deg, $from_color, $to_color) {
+  border-bottom: $width solid
+    linear-gradient($deg, $from_color 0%, $to_color 100%);
+  background: $width solid -moz-linear-gradient($deg, $from_color 0%, $to_color
+        100%);
+  background: $width solid -webkit-linear-gradient($deg, $from_color 0%, $to_color
+        100%);
+  background: $width solid -o-linear-gradient($deg, $from_color 0%, $to_color
+        100%);
+}
+
+@mixin flex-start-between($colmounts, $gapPercentage) {
+  @if ($colmounts==1) {
+    &:nth-child(n) {
+      @content;
+      width: 100 - ($gapPercentage * 2)+0%;
+      margin-left: $gapPercentage + 0%;
+      margin-right: $gapPercentage + 0%;
+      margin-bottom: $gapPercentage + 0%;
+    }
+  } @else if($colmounts==2) {
+    &:nth-child(n) {
+      @content;
+      width: (100-$gapPercentage)/2+0%;
+      margin-left: 0%;
+      margin-right: $gapPercentage + 0%;
+      margin-bottom: $gapPercentage + 0%;
+    }
+    &:nth-child(2n) {
+      @content;
+      margin-left: 0%;
+      margin-right: 0%;
+      margin-bottom: $gapPercentage + 0%;
+    }
+  } @else {
+    $boxwidth: (100 - ($gapPercentage * ($colmounts - 2 + 1))) / $colmounts;
+    &:nth-child(n) {
+      @content;
+      width: $boxwidth + 0%;
+      margin-left: 0%;
+      margin-right: $gapPercentage + 0%;
+      margin-bottom: $gapPercentage + 0%;
+    }
+    &:nth-child(#{$colmounts}n) {
+      @content;
+      margin-left: 0%;
+      margin-right: 0%;
+      margin-bottom: $gapPercentage + 0%;
+    }
+  }
+}
+@mixin scrollcontainer() {
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+  }
+  &::-webkit-scrollbar:vertical {
+    width: 5px;
+    background-color: #d3dce6;
+  }
+  &::-webkit-scrollbar:horizontal {
+    height: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background-color: #99a9bf;
+  }
+}
+
+@mixin triangle($direction, $length, $color) {
+  //sqrt(3)
+  $height: 1.732 * $length;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  line-height: 0px;
+  _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000');
+  @if ($direction == "up") {
+    border-width: 0px $length $height $length;
+    border-color: transparent transparent $color transparent;
+    _border-color: #000000 #000000 $color #000000;
+  } @else if($direction == "down") {
+    border-width: $height $length 0px $length;
+    border-color: $color transparent transparent transparent;
+    _border-color: $color #000000 #000000 #000000;
+  } @else if($direction == "left") {
+    border-width: $length $height $length 0px;
+    border-color: transparent $color transparent transparent;
+    _border-color: #000000 $color #000000 #000000;
+  } @else if($direction == "right") {
+    border-width: $length 0px $length $height;
+    border-color: transparent transparent transparent $color;
+    _border-color: #000000 #000000 #000000 $color;
+  }
+}
+
+@mixin boxshadow($offsetX, $offsetY, $expand, $color) {
+  box-shadow: $offsetX $offsetY $expand $color;
+  -webkit-box-shadow: $offsetX $offsetY $expand $color;
+  -moz-box-shadow: $offsetX $offsetY $expand $color;
+}
+@mixin textdot($line) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+}
