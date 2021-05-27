@@ -50,130 +50,130 @@ export default class extends Vue {
   private fuse?: Fuse<RouteConfig>
 
   get routes() {
-    return PermissionModule.routes
+  	return PermissionModule.routes
   }
 
   get lang() {
-    return AppModule.language
+  	return AppModule.language
   }
 
   @Watch('lang')
   private onLangChange() {
-    this.searchPool = this.generateRoutes(this.routes)
+  	this.searchPool = this.generateRoutes(this.routes)
   }
 
   @Watch('routes')
   private onRoutesChange() {
-    this.searchPool = this.generateRoutes(this.routes)
+  	this.searchPool = this.generateRoutes(this.routes)
   }
 
   @Watch('searchPool')
   private onSearchPoolChange(value: RouteConfig[]) {
-    this.initFuse(value)
+  	this.initFuse(value)
   }
 
   @Watch('show')
   private onShowChange(value: boolean) {
-    if (value) {
-      document.body.addEventListener('click', this.close)
-    } else {
-      document.body.removeEventListener('click', this.close)
-    }
+  	if (value) {
+  		document.body.addEventListener('click', this.close)
+  	} else {
+  		document.body.removeEventListener('click', this.close)
+  	}
   }
 
   mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
+  	this.searchPool = this.generateRoutes(this.routes)
   }
 
   private click() {
-    this.show = !this.show
-    if (this.show) {
-      this.$refs.headerSearchSelect && (this.$refs.headerSearchSelect as HTMLElement).focus()
-    }
+  	this.show = !this.show
+  	if (this.show) {
+  		this.$refs.headerSearchSelect && (this.$refs.headerSearchSelect as HTMLElement).focus()
+  	}
   }
 
   private close() {
-    this.$refs.headerSearchSelect && (this.$refs.headerSearchSelect as HTMLElement).blur()
-    this.options = []
-    this.show = false
+  	this.$refs.headerSearchSelect && (this.$refs.headerSearchSelect as HTMLElement).blur()
+  	this.options = []
+  	this.show = false
   }
 
   private change(route: RouteConfig) {
-    this.$router.push(route.path).catch(err => {
-      console.warn(err)
-    })
-    this.search = ''
-    this.options = []
-    this.$nextTick(() => {
-      this.show = false
-    })
+  	this.$router.push(route.path).catch(err => {
+  		console.warn(err)
+  	})
+  	this.search = ''
+  	this.options = []
+  	this.$nextTick(() => {
+  		this.show = false
+  	})
   }
 
   private initFuse(list: RouteConfig[]) {
-    this.fuse = new Fuse(list, {
-      shouldSort: true,
-      threshold: 0.4,
-      location: 0,
-      distance: 100,
-      minMatchCharLength: 1,
-      keys: [{
-        name: 'title',
-        weight: 0.7
-      }, {
-        name: 'path',
-        weight: 0.3
-      }]
-    })
+  	this.fuse = new Fuse(list, {
+  		shouldSort: true,
+  		threshold: 0.4,
+  		location: 0,
+  		distance: 100,
+  		minMatchCharLength: 1,
+  		keys: [{
+  			name: 'title',
+  			weight: 0.7
+  		}, {
+  			name: 'path',
+  			weight: 0.3
+  		}]
+  	})
   }
 
   // Filter out the routes that can be displayed in the sidebar
   // And generate the internationalized title
   private generateRoutes(routes: RouteConfig[], basePath = '/', prefixTitle: string[] = []) {
-    let res: RouteConfig[] = []
+  	let res: RouteConfig[] = []
 
-    for (const router of routes) {
-      // skip hidden router
-      if (router.meta && router.meta.hidden) {
-        continue
-      }
+  	for (const router of routes) {
+  		// skip hidden router
+  		if (router.meta && router.meta.hidden) {
+  			continue
+  		}
 
-      const data: RouteConfig = {
-        path: path.resolve(basePath, router.path),
-        meta: {
-          title: [...prefixTitle]
-        }
-      }
+  		const data: RouteConfig = {
+  			path: path.resolve(basePath, router.path),
+  			meta: {
+  				title: [...prefixTitle]
+  			}
+  		}
 
-      if (router.meta && router.meta.title) {
-        // generate internationalized title
-        const i18ntitle = i18n.t(`route.${router.meta.title}`).toString()
-        data.meta.title = [...data.meta.title, i18ntitle]
-        if (router.redirect !== 'noRedirect') {
-          // only push the routes with title
-          // special case: need to exclude parent router without redirect
-          res.push(data)
-        }
-      }
+  		if (router.meta && router.meta.title) {
+  			// generate internationalized title
+  			const i18ntitle = i18n.t(`route.${router.meta.title}`).toString()
+  			data.meta.title = [...data.meta.title, i18ntitle]
+  			if (router.redirect !== 'noRedirect') {
+  				// only push the routes with title
+  				// special case: need to exclude parent router without redirect
+  				res.push(data)
+  			}
+  		}
 
-      // recursive child routes
-      if (router.children) {
-        const tempRoutes = this.generateRoutes(router.children, data.path, data.meta.title)
-        if (tempRoutes.length >= 1) {
-          res = [...res, ...tempRoutes]
-        }
-      }
-    }
-    return res
+  		// recursive child routes
+  		if (router.children) {
+  			const tempRoutes = this.generateRoutes(router.children, data.path, data.meta.title)
+  			if (tempRoutes.length >= 1) {
+  				res = [...res, ...tempRoutes]
+  			}
+  		}
+  	}
+  	return res
   }
 
   private querySearch(query: string) {
-    if (query !== '') {
-      if (this.fuse) {
-        this.options = this.fuse.search(query).map((result) => result.item)
-      }
-    } else {
-      this.options = []
-    }
+  	if (query !== '') {
+  		if (this.fuse) {
+  			this.options = this.fuse.search(query).map((result) => result.item)
+  		}
+  	} else {
+  		this.options = []
+  	}
   }
 }
 </script>

@@ -27,11 +27,11 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   private option = 'number'
   private optionList = [{
-    value: 'number',
-    label: '訂單編號'
+  	value: 'number',
+  	label: '訂單編號'
   }, {
-    value: 'name',
-    label: '姓名'
+  	value: 'name',
+  	label: '姓名'
   }]
 }
 </script>

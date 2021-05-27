@@ -71,13 +71,13 @@ export default class extends Vue {
   private dialogVisible = false
 
   private back() {
-    if (this.$route.query.noGoBack) {
-      this.$router.push({ path: '/dashboard' }).catch(err => {
-        console.warn(err)
-      })
-    } else {
-      this.$router.go(-1)
-    }
+  	if (this.$route.query.noGoBack) {
+  		this.$router.push({ path: '/dashboard' }).catch(err => {
+  			console.warn(err)
+  		})
+  	} else {
+  		this.$router.go(-1)
+  	}
   }
 }
 </script>

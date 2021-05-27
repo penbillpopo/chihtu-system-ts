@@ -1,5 +1,7 @@
 import { VuexModule, Module, Action, Mutation, getModule } from 'vuex-module-decorators'
-import { login, getUserInfo } from '@/api/users'
+import { login, getInfo } from '@/api/system'
+import { IQlogin, ISlogin } from '@/api/dto/system/login'
+import { ISgetInfo } from '@/api/dto/system/getInfo'
 import { getToken, setToken, removeToken } from '@/utils/cookies'
 import router, { resetRouter } from '@/router'
 import { PermissionModule } from './permission'
@@ -20,84 +22,84 @@ class User extends VuexModule implements IUserState {
 
   @Mutation
   private SET_TOKEN(token: string) {
-    this.token = token
+  	this.token = token
   }
 
   @Mutation
   private SET_NAME(name: string) {
-    this.name = name
+  	this.name = name
   }
 
   @Mutation
   private SET_ROLES(roles: string[]) {
-    this.roles = roles
+  	this.roles = roles
   }
 
   @Action
-  public async Login(userInfo: { username: string, password: string}) {
-    let { username, password } = userInfo
-    username = username.trim()
-    let res:any = await login({ account:username, password })
-    setToken(res.token)
-    this.SET_TOKEN(res.token)
+  public async Login(loginDto:IQlogin) {
+  	const res:any = await login(loginDto)
+  	const resData:ISlogin = res
+  	setToken(resData.data.token)
+  	this.SET_TOKEN(resData.data.token)
   }
 
   @Action
   public ResetToken() {
-    removeToken()
-    this.SET_TOKEN('')
-    this.SET_ROLES([])
+  	removeToken()
+  	this.SET_TOKEN('')
+  	this.SET_ROLES([])
   }
 
   @Action
-  public async GetUserInfo() {
-    if (this.token === '') {
-      throw Error('GetUserInfo: token is undefined!')
-    }
-    let res:any = await getUserInfo()
-    if (!res) {
-      throw Error('Verification failed, please Login again.')
-    }
-    const { roles, name} = res
-    // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(roles)
-    this.SET_NAME(name)
+  public async GetInfo() {
+  	if (this.token === '') {
+  		throw Error('GetInfo: token is undefined!')
+  	}
+  	const res:any = await getInfo()
+  	const resData:ISgetInfo = res
+  	if (!resData) {
+  		throw Error('Verification failed, please Login again.')
+  	}
+  	const { roles, name } = resData.data
+  	// roles must be a non-empty array
+  	if (!roles || roles.length <= 0) {
+  		throw Error('GetInfo: roles must be a non-null array!')
+  	}
+  	this.SET_ROLES(roles.split(','))
+  	this.SET_NAME(name)
   }
 
   @Action
   public async ChangeRoles(role: string) {
-    // Dynamically modify permissions
-    const token = role + '-token'
-    this.SET_TOKEN(token)
-    setToken(token)
-    await this.GetUserInfo()
-    resetRouter()
-    // Generate dynamic accessible routes based on roles
-    PermissionModule.GenerateRoutes(this.roles)
-    // Add generated routes
-    PermissionModule.dynamicRoutes.forEach(route => {
-      router.addRoute(route)
-    })
-    // Reset visited views and cached views
-    TagsViewModule.delAllViews()
+  	// Dynamically modify permissions
+  	const token = role + '-token'
+  	this.SET_TOKEN(token)
+  	setToken(token)
+  	await this.GetInfo()
+  	resetRouter()
+  	// Generate dynamic accessible routes based on roles
+  	PermissionModule.GenerateRoutes(this.roles)
+  	// Add generated routes
+  	PermissionModule.dynamicRoutes.forEach(route => {
+  		router.addRoute(route)
+  	})
+  	// Reset visited views and cached views
+  	TagsViewModule.delAllViews()
   }
 
   @Action
   public async LogOut() {
-    if (this.token === '') {
-      throw Error('LogOut: token is undefined!')
-    }
-    // await logout()
-    removeToken()
-    resetRouter()
+  	if (this.token === '') {
+  		throw Error('LogOut: token is undefined!')
+  	}
+  	// await logout()
+  	removeToken()
+  	resetRouter()
 
-    // Reset visited views and cached views
-    TagsViewModule.delAllViews()
-    this.SET_TOKEN('')
-    this.SET_ROLES([])
+  	// Reset visited views and cached views
+  	TagsViewModule.delAllViews()
+  	this.SET_TOKEN('')
+  	this.SET_ROLES([])
   }
 }
 

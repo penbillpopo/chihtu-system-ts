@@ -91,42 +91,42 @@ export default class extends Vue {
   //   }
   // },
   private tableData = [
-    {
-      blockIp: '120.11.25.66',
-      createdBy: 'Bill',
-      reason: '惡意攻擊',
-      updatedAt: '2020/01/08 17:32:50'
-    },
-    {
-      blockIp: '120.11.25.55',
-      createdBy: 'Jonny',
-      reason: '惡意攻擊',
-      updatedAt: '2020/01/08 17:32:50'
-    }
+  	{
+  		blockIp: '120.11.25.66',
+  		createdBy: 'Bill',
+  		reason: '惡意攻擊',
+  		updatedAt: '2020/01/08 17:32:50'
+  	},
+  	{
+  		blockIp: '120.11.25.55',
+  		createdBy: 'Jonny',
+  		reason: '惡意攻擊',
+  		updatedAt: '2020/01/08 17:32:50'
+  	}
   ]
 
   private pageData = {
-    pagesize: 25,
-    page: 1
+  	pagesize: 25,
+  	page: 1
   }
 
   private pageTotal = 0
   private handleSizeChange(val:any) {
-    this.pageData.pagesize = val
+  	this.pageData.pagesize = val
   }
 
   private handleCurrentChange(val:any) {
-    this.pageData.page = val
+  	this.pageData.page = val
   }
 
   private openDialog() {
-    const formdata = {
-      blockIp: '',
-      createdBy: '',
-      reason: '',
-      updatedAt: ''
-    }
-    // this.$refs.dialog.handleOpen(formdata)
+  	const formdata = {
+  		blockIp: '',
+  		createdBy: '',
+  		reason: '',
+  		updatedAt: ''
+  	}
+  	// this.$refs.dialog.handleOpen(formdata)
   }
 }
 </script>

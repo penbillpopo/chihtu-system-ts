@@ -4,7 +4,7 @@
       <searchPanel />
       <div class="head-container">
         <p class="title">帳號管理</p>
-        <el-button icon="el-icon-plus" type="primary" size="mini" @click="openDialog" >
+        <el-button icon="el-icon-plus" type="primary" @click="openDialogCreate" >
           新增帳號
         </el-button>
       </div>
@@ -36,8 +36,8 @@
             width="200"
           >
             <template slot-scope="{row}">
-              <el-tag :type="row.status | statusColor">
-                {{ row.status | statusText }}
+              <el-tag :type="statusColor(row.status)">
+                {{ statusText(row.status) }}
               </el-tag>
             </template>
           </el-table-column>
@@ -50,9 +50,9 @@
           <el-table-column
             label="操作"
           >
-            <template>
+            <template slot-scope="scope">
               <div>
-                <el-button type="primary" size="mini" @click="openDialog">編輯</el-button>
+                <el-button type="primary" size="mini" @click="openDialogEdit(scope.$index)">編輯</el-button>
                 <el-button type="danger" size="mini">刪除</el-button>
               </div>
             </template>
@@ -80,9 +80,9 @@
 import searchPanel from './searchPanel.vue'
 import Dialog from './dialog.vue'
 import { Component, Vue } from 'vue-property-decorator'
-
-// import {getUsers} from '@/api/system'
-// import {getUsersDto} from '@/api/dto/system.dto'
+import { getUsers } from '@/api/system'
+import { ISgetUsers } from '@/api/dto/system/getUsers'
+import { IndexTF, ITindex } from './format/indexTF'
 
 @Component({
   name: 'Account',
@@ -90,29 +90,12 @@ import { Component, Vue } from 'vue-property-decorator'
     searchPanel, Dialog
   }
 })
+
 export default class extends Vue {
-  // filters: {
-  //   statusColor(status) {
-  //     switch (status) {
-  //       case '0':
-  //         return 'info'
-  //       case '1':
-  //         return 'success'
-  //     }
-  //   },
-  //   statusText(status) {
-  //     switch (status) {
-  //       case '0':
-  //         return '停用'
-  //       case '1':
-  //         return '啟用'
-  //     }
-  //   }
-  // },
-  private tableData = []
+  private tableData: Array<ITindex> = []
   private pageData = {
-    pagesize: 25,
-    page: 1
+  	pagesize: 25,
+  	page: 1
   }
 
   private pageTotal = 0
@@ -122,18 +105,13 @@ export default class extends Vue {
   }
 
   private initData() {
-    // getUsers().then((res)=>{
-    //   res.data.forEach(element => {
-    //     this.tableData.push(new getUsersDto(
-    //       element.account,
-    //       element.name,
-    //       element.roleName,
-    //       element.status,
-    //       element.updatedAt,
-    //     ))
-    //   });
-    //   console.log(this.tableData)
-    // })
+  	getUsers().then((res:any) => {
+  		const resData:ISgetUsers = res
+  		resData.data.content.forEach(element => {
+        const { account, name, roleName, status, updatedAt, id, roleId } = element
+  			this.tableData.push(new IndexTF(account, name, roleName, status === '1', updatedAt, id, roleId))
+  		})
+  	})
   }
 
   private handleSizeChange(val:any) {
@@ -141,18 +119,27 @@ export default class extends Vue {
   }
 
   private handleCurrentChange(val:any) {
-    this.pageData.page = val
+  	this.pageData.page = val
   }
 
-  private openDialog() {
-    const formdata = {
-      account: '',
-      name: '',
-      roleName: '',
-      authority: '',
-      status: true
-    }
-    // this.$refs.dialog.handleOpen(formdata)
+  private openDialogCreate() {
+    const formdata:ITindex = new IndexTF()
+    const dialog:any = this.$refs.dialog
+    dialog.handleOpen(formdata)
+  }
+
+  private openDialogEdit(index = 0) {
+  	const formdata:ITindex = this.tableData[index]
+  	const dialog:any = this.$refs.dialog
+  	dialog.handleOpen(formdata, index)
+  }
+
+  private statusColor(status:boolean) {
+  	return status ? 'success' : 'info'
+  }
+
+  private statusText(status:boolean) {
+  	return status ? '啟用' : '停用'
   }
 }
 </script>

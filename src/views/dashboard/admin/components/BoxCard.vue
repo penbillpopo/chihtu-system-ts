@@ -55,6 +55,7 @@ export default class extends Vue {
   get name() {
     return UserModule.name
   }
+
   get roles() {
     return UserModule.roles
   }

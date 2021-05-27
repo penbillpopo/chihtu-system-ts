@@ -139,13 +139,13 @@ export default class extends Vue {
   private formdata = null
   private dialogVisible = false
   private tableData = [
-    {
-      prodPic: '',
-      prodNum: '012345',
-      prodName: '玩具',
-      count: '紅色大:5\n綠色小: 10',
-      total: '100'
-    }
+  	{
+  		prodPic: '',
+  		prodNum: '012345',
+  		prodName: '玩具',
+  		count: '紅色大:5\n綠色小: 10',
+  		total: '100'
+  	}
   ]
 }
 

@@ -48,32 +48,32 @@ export default class extends Vue {
   @Prop({ default: 'Max Files Exceeded' }) private dictMaxFilesExceeded!: string
 
   get dropzoneOptions() {
-    return {
-      url: this.url,
-      thumbnailWidth: this.thumbnailWidth,
-      thumbnailHeight: this.thumbnailHeight,
-      maxFiles: this.maxFiles,
-      maxFilesize: this.maxFilesize,
-      autoProcessQueue: this.autoProcessQueue,
-      addRemoveLinks: this.addRemoveLinks,
-      dictDefaultMessage: this.dictDefaultMessage,
-      dictFallbackMessage: this.dictFallbackMessage,
-      dictRemoveFile: this.dictRemoveFile,
-      dictMaxFilesExceeded: this.dictMaxFilesExceeded
-    }
+  	return {
+  		url: this.url,
+  		thumbnailWidth: this.thumbnailWidth,
+  		thumbnailHeight: this.thumbnailHeight,
+  		maxFiles: this.maxFiles,
+  		maxFilesize: this.maxFilesize,
+  		autoProcessQueue: this.autoProcessQueue,
+  		addRemoveLinks: this.addRemoveLinks,
+  		dictDefaultMessage: this.dictDefaultMessage,
+  		dictFallbackMessage: this.dictFallbackMessage,
+  		dictRemoveFile: this.dictRemoveFile,
+  		dictMaxFilesExceeded: this.dictMaxFilesExceeded
+  	}
   }
 
   get themeColor() {
-    return SettingsModule.theme
+  	return SettingsModule.theme
   }
 
   // You can add more Event handler, see: https://rowanwins.github.io/vue-dropzone/docs/dist/#/events
   private dropzoneSuccess(file: File, response: any) {
-    this.$emit('dropzone-success', file, response)
+  	this.$emit('dropzone-success', file, response)
   }
 
   private dropzoneRemovedFile(file: File, error: Error, xhr: XMLHttpRequest) {
-    this.$emit('dropzone-removed-file', file, error, xhr)
+  	this.$emit('dropzone-removed-file', file, error, xhr)
   }
 }
 </script>

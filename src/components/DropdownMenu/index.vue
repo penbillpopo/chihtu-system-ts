@@ -37,7 +37,7 @@ export default class extends Vue {
   private isActive = false
 
   private clickTitle() {
-    this.isActive = !this.isActive
+  	this.isActive = !this.isActive
   }
 }
 </script>

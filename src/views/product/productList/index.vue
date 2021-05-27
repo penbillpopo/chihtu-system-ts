@@ -83,43 +83,43 @@ import searchPanel from './searchPanel.vue'
 })
 export default class extends Vue {
   private tableData = [
-    {
-      name: '哥吉拉',
-      number: '0123456789',
-      spec: '大',
-      price: '3000',
-      sales: '12',
-      updatedAt: '2020/01/08 17:32:50'
-    },
-    {
-      name: '哥吉拉',
-      number: '0123456788',
-      spec: '小',
-      price: '2000',
-      sales: '10',
-      updatedAt: '2020/01/08 17:32:30'
-    }
+  	{
+  		name: '哥吉拉',
+  		number: '0123456789',
+  		spec: '大',
+  		price: '3000',
+  		sales: '12',
+  		updatedAt: '2020/01/08 17:32:50'
+  	},
+  	{
+  		name: '哥吉拉',
+  		number: '0123456788',
+  		spec: '小',
+  		price: '2000',
+  		sales: '10',
+  		updatedAt: '2020/01/08 17:32:30'
+  	}
   ]
 
   private pageData = {
-    pagesize: 25,
-    page: 1
+  	pagesize: 25,
+  	page: 1
   }
 
   private pageTotal = 0
   private handleSizeChange(val:any) {
-    this.pageData.pagesize = val
+  	this.pageData.pagesize = val
   }
 
   private handleCurrentChange(val:any) {
-    this.pageData.page = val
+  	this.pageData.page = val
   }
 
   private openEdit(data:any) {
-    this.$router.push({
-      path: '/product/productList/edit',
-      query: data
-    })
+  	this.$router.push({
+  		path: '/product/productList/edit',
+  		query: data
+  	})
   }
 }
 </script>

@@ -59,34 +59,34 @@ export default class extends Vue {
   private editing = false
 
   private deleteTodo(todo: ITodo) {
-    this.$emit('delete-todo', todo)
+  	this.$emit('delete-todo', todo)
   }
 
   private editTodo({ todo, value }: { todo: ITodo, value: string }) {
-    this.$emit('edit-todo', { todo, value })
+  	this.$emit('edit-todo', { todo, value })
   }
 
   private toggleTodo(todo: ITodo) {
-    this.$emit('toggle-todo', todo)
+  	this.$emit('toggle-todo', todo)
   }
 
   private doneEdit(e: KeyboardEvent) {
-    const value = (e.target as HTMLInputElement).value.trim()
-    const { todo } = this
-    if (!value) {
-      this.deleteTodo(todo)
-    } else if (this.editing) {
-      this.editTodo({
-        todo,
-        value
-      })
-      this.editing = false
-    }
+  	const value = (e.target as HTMLInputElement).value.trim()
+  	const { todo } = this
+  	if (!value) {
+  		this.deleteTodo(todo)
+  	} else if (this.editing) {
+  		this.editTodo({
+  			todo,
+  			value
+  		})
+  		this.editing = false
+  	}
   }
 
   private cancelEdit(e: KeyboardEvent) {
-    (e.target as HTMLInputElement).value = this.todo.text
-    this.editing = false
+  	(e.target as HTMLInputElement).value = this.todo.text
+  	this.editing = false
   }
 }
 </script>

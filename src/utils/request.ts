@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
 
 const service = axios.create({
@@ -58,9 +58,9 @@ service.interceptors.response.use(
     // } else {
     //   return response.data
     // }
-    if(res.success){
-      return res.data
-    }else{
+    if (res.success) {
+      return res
+    } else {
       Message({
         message: res.msg || 'Error',
         type: 'error',

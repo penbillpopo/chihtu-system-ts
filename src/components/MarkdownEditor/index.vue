@@ -31,84 +31,84 @@ export default class extends Vue {
   // Mapping for local lang to tuiEditor lang
   // https://github.com/nhn/tui.editor/blob/master/apps/editor/docs/i18n.md#supported-languages
   private languageTypeList: { [key: string]: string } = {
-    en: 'en',
-    zh: 'zh-CN',
-    es: 'es',
-    ja: 'ja',
-    ko: 'ko',
-    it: 'it'
+  	en: 'en',
+  	zh: 'zh-CN',
+  	es: 'es',
+  	ja: 'ja',
+  	ko: 'ko',
+  	it: 'it'
   }
 
   get editorOptions() {
-    const options = Object.assign({}, defaultOptions, this.options)
-    options.initialEditType = this.mode
-    options.height = this.height
-    options.language = this.languageTypeList[this.language]
-    return options
+  	const options = Object.assign({}, defaultOptions, this.options)
+  	options.initialEditType = this.mode
+  	options.height = this.height
+  	options.language = this.languageTypeList[this.language]
+  	return options
   }
 
   @Watch('language')
   private onLanguageChange() {
-    this.destroyEditor()
-    this.initEditor()
+  	this.destroyEditor()
+  	this.initEditor()
   }
 
   @Watch('height')
   private onHeightChange(value: string) {
-    if (this.markdownEditor) {
-      this.markdownEditor.height(value)
-    }
+  	if (this.markdownEditor) {
+  		this.markdownEditor.height(value)
+  	}
   }
 
   @Watch('mode')
   private onModeChange(value: string) {
-    if (this.markdownEditor) {
-      this.markdownEditor.changeMode(value)
-    }
+  	if (this.markdownEditor) {
+  		this.markdownEditor.changeMode(value)
+  	}
   }
 
   mounted() {
-    this.initEditor()
+  	this.initEditor()
   }
 
   destroyed() {
-    this.destroyEditor()
+  	this.destroyEditor()
   }
 
   private initEditor() {
-    const editorElement = document.getElementById(this.id)
-    if (!editorElement) return
-    // eslint-disable-next-line new-cap
-    this.markdownEditor = new Editor({
-      ...this.editorOptions,
-      el: editorElement
-    })
-    this.markdownEditor.insertText(this.initialValue)
+  	const editorElement = document.getElementById(this.id)
+  	if (!editorElement) return
+  	// eslint-disable-next-line new-cap
+  	this.markdownEditor = new Editor({
+  		...this.editorOptions,
+  		el: editorElement
+  	})
+  	this.markdownEditor.insertText(this.initialValue)
   }
 
   private destroyEditor() {
-    if (!this.markdownEditor) return
-    this.markdownEditor.remove()
-    this.markdownEditor = undefined
+  	if (!this.markdownEditor) return
+  	this.markdownEditor.remove()
+  	this.markdownEditor = undefined
   }
 
   public focus() {
-    if (this.markdownEditor) {
-      this.markdownEditor.focus()
-    }
+  	if (this.markdownEditor) {
+  		this.markdownEditor.focus()
+  	}
   }
 
   public setHtml(value: string) {
-    if (this.markdownEditor) {
-      this.markdownEditor.setHtml(value)
-    }
+  	if (this.markdownEditor) {
+  		this.markdownEditor.setHtml(value)
+  	}
   }
 
   public getHtml() {
-    if (this.markdownEditor) {
-      return this.markdownEditor.getHtml()
-    }
-    return ''
+  	if (this.markdownEditor) {
+  		return this.markdownEditor.getHtml()
+  	}
+  	return ''
   }
 }
 </script>

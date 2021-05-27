@@ -23,33 +23,33 @@ export default class extends Vue {
   }
 
   beforeMount() {
-    window.addEventListener('resize', this.resizeHandler)
+  	window.addEventListener('resize', this.resizeHandler)
   }
 
   mounted() {
-    const isMobile = this.isMobile()
-    if (isMobile) {
-      AppModule.ToggleDevice(DeviceType.Mobile)
-      AppModule.CloseSideBar(true)
-    }
+  	const isMobile = this.isMobile()
+  	if (isMobile) {
+  		AppModule.ToggleDevice(DeviceType.Mobile)
+  		AppModule.CloseSideBar(true)
+  	}
   }
 
   beforeDestroy() {
-    window.removeEventListener('resize', this.resizeHandler)
+  	window.removeEventListener('resize', this.resizeHandler)
   }
 
   private isMobile() {
-    const rect = document.body.getBoundingClientRect()
-    return rect.width - 1 < WIDTH
+  	const rect = document.body.getBoundingClientRect()
+  	return rect.width - 1 < WIDTH
   }
 
   private resizeHandler() {
-    if (!document.hidden) {
-      const isMobile = this.isMobile()
-      AppModule.ToggleDevice(isMobile ? DeviceType.Mobile : DeviceType.Desktop)
-      if (isMobile) {
-        AppModule.CloseSideBar(true)
-      }
-    }
+  	if (!document.hidden) {
+  		const isMobile = this.isMobile()
+  		AppModule.ToggleDevice(isMobile ? DeviceType.Mobile : DeviceType.Desktop)
+  		if (isMobile) {
+  			AppModule.CloseSideBar(true)
+  		}
+  	}
   }
 }

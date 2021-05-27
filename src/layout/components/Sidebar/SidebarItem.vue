@@ -80,50 +80,50 @@ export default class extends Vue {
   @Prop({ default: '' }) private basePath!: string
 
   get alwaysShowRootMenu() {
-    if (this.item.meta && this.item.meta.alwaysShow) {
-      return true
-    }
-    return false
+  	if (this.item.meta && this.item.meta.alwaysShow) {
+  		return true
+  	}
+  	return false
   }
 
   get showingChildNumber() {
-    if (this.item.children) {
-      const showingChildren = this.item.children.filter((item) => {
-        if (item.meta && item.meta.hidden) {
-          return false
-        } else {
-          return true
-        }
-      })
-      return showingChildren.length
-    }
-    return 0
+  	if (this.item.children) {
+  		const showingChildren = this.item.children.filter((item) => {
+  			if (item.meta && item.meta.hidden) {
+  				return false
+  			} else {
+  				return true
+  			}
+  		})
+  		return showingChildren.length
+  	}
+  	return 0
   }
 
   get theOnlyOneChild() {
-    if (this.showingChildNumber > 1) {
-      return null
-    }
-    if (this.item.children) {
-      for (const child of this.item.children) {
-        if (!child.meta || !child.meta.hidden) {
-          return child
-        }
-      }
-    }
-    // If there is no children, return itself with path removed,
-    // because this.basePath already conatins item's path information
-    return { ...this.item, path: '' }
+  	if (this.showingChildNumber > 1) {
+  		return null
+  	}
+  	if (this.item.children) {
+  		for (const child of this.item.children) {
+  			if (!child.meta || !child.meta.hidden) {
+  				return child
+  			}
+  		}
+  	}
+  	// If there is no children, return itself with path removed,
+  	// because this.basePath already conatins item's path information
+  	return { ...this.item, path: '' }
   }
 
   private resolvePath(routePath: string) {
-    if (isExternal(routePath)) {
-      return routePath
-    }
-    if (isExternal(this.basePath)) {
-      return this.basePath
-    }
-    return path.resolve(this.basePath, routePath)
+  	if (isExternal(routePath)) {
+  		return routePath
+  	}
+  	if (isExternal(this.basePath)) {
+  		return this.basePath
+  	}
+  	return path.resolve(this.basePath, routePath)
   }
 }
 </script>
@@ -179,15 +179,20 @@ export default class extends Vue {
 .svg-icon {
   margin-right: 16px;
 }
-
+i{
+  color: #bfcbd9;
+}
+.full-mode {
+  i{
+    transform:translateX(-5px);
+  }
+}
 .simple-mode {
   .svg-icon {
     margin-left: 20px;
   }
   i{
-    margin-left: 15px;
-    color: #bfcbd9;
+    transform:translateX(15px);
   }
-  
 }
 </style>

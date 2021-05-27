@@ -35,33 +35,33 @@ export default class extends Vue {
   @Prop({ default: false }) private hidden!: boolean
 
   get currentPage() {
-    return this.page
+  	return this.page
   }
 
   set currentPage(value) {
-    this.$emit('update:page', value)
+  	this.$emit('update:page', value)
   }
 
   get pageSize() {
-    return this.limit
+  	return this.limit
   }
 
   set pageSize(value) {
-    this.$emit('update:limit', value)
+  	this.$emit('update:limit', value)
   }
 
   handleSizeChange(value: number) {
-    this.$emit('pagination', { page: this.currentPage, limit: value })
-    if (this.autoScroll) {
-      scrollTo(0, 800)
-    }
+  	this.$emit('pagination', { page: this.currentPage, limit: value })
+  	if (this.autoScroll) {
+  		scrollTo(0, 800)
+  	}
   }
 
   handleCurrentChange(value: number) {
-    this.$emit('pagination', { page: value, limit: this.pageSize })
-    if (this.autoScroll) {
-      scrollTo(0, 800)
-    }
+  	this.$emit('pagination', { page: value, limit: this.pageSize })
+  	if (this.autoScroll) {
+  		scrollTo(0, 800)
+  	}
   }
 }
 </script>

@@ -40,20 +40,20 @@ export default class extends Vue {
   private formdata:any = {}
   private dialogVisible = false
   private handleClose() {
-    this.dialogVisible = false
+  	this.dialogVisible = false
   }
 
   private handleOpen(formdata:any) {
-    this.dialogVisible = true
-    this.formdata = Object.assign({}, formdata)
+  	this.dialogVisible = true
+  	this.formdata = Object.assign({}, formdata)
   }
 
   private addOptionbox() {
-    this.formdata.optionList.push(new OptionData())
+  	this.formdata.optionList.push(new OptionData())
   }
 
   private deleteOptionbox(index:number) {
-    this.formdata.optionList.splice(index, 1)
+  	this.formdata.optionList.splice(index, 1)
   }
 }
 </script>

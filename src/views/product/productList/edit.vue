@@ -272,105 +272,105 @@ export default class extends Vue {
   private temp:any = []
 
   private modifySpecTable() {
-    for (let i = 0; i < this.temp.length; i++) {
-      if (this.temp[i].optionPrice) {
-        this.$set(this.specTable[i], 'optionPrice', this.temp[i].optionPrice)
-      }
-      if (this.temp[i].optionAmount) {
-        this.$set(this.specTable[i], 'optionAmount', this.temp[i].optionAmount)
-      }
-      if (this.temp[i].optionItemNumber) {
-        this.$set(this.specTable[i], 'optionItemNumber', this.temp[i].optionItemNumber)
-      }
-    }
+  	for (let i = 0; i < this.temp.length; i++) {
+  		if (this.temp[i].optionPrice) {
+  			this.$set(this.specTable[i], 'optionPrice', this.temp[i].optionPrice)
+  		}
+  		if (this.temp[i].optionAmount) {
+  			this.$set(this.specTable[i], 'optionAmount', this.temp[i].optionAmount)
+  		}
+  		if (this.temp[i].optionItemNumber) {
+  			this.$set(this.specTable[i], 'optionItemNumber', this.temp[i].optionItemNumber)
+  		}
+  	}
   }
 
   private addSpecbox() {
-    this.formdata.specList.push(new SpecData())
+  	this.formdata.specList.push(new SpecData())
   }
 
   private deleteSpecbox(index:any) {
-    this.formdata.specList.splice(index, 1)
+  	this.formdata.specList.splice(index, 1)
   }
 
   private addOptionbox(parent:any) {
-    parent.optionList.push(new OptionData())
+  	parent.optionList.push(new OptionData())
   }
 
   private deleteOptionbox(parent:any, index:any) {
-    parent.optionList.splice(index, 1)
+  	parent.optionList.splice(index, 1)
   }
 
   private specListRecursive(arr:any, index:any) {
-    if (index === arr.length) {
-      this.specTable.push(Object.assign({}, this.recursiveTempObj))
-      return
-    }
-    for (let i = 0; i < arr[index].optionList.length; i++) {
-      this.recursiveTempObj[arr[index].specName] = arr[index].optionList[i].optionName
-      this.specListRecursive(arr, index + 1)
-    }
+  	if (index === arr.length) {
+  		this.specTable.push(Object.assign({}, this.recursiveTempObj))
+  		return
+  	}
+  	for (let i = 0; i < arr[index].optionList.length; i++) {
+  		this.recursiveTempObj[arr[index].specName] = arr[index].optionList[i].optionName
+  		this.specListRecursive(arr, index + 1)
+  	}
   }
 
   private coverUploadRemove(file:any, fileList:any) {
-    this.coverUploadBtnVisable(fileList)
+  	this.coverUploadBtnVisable(fileList)
   }
 
   private coverUploadChange(file:any, fileList:any) {
-    this.coverUploadBtnVisable(fileList)
+  	this.coverUploadBtnVisable(fileList)
   }
 
   private coverUploadCardPreview(file:any) {
-    this.dialogImageUrl = file.url
-    this.dialogVisible = true
+  	this.dialogImageUrl = file.url
+  	this.dialogVisible = true
   }
 
   private coverUploadBtnVisable(fileList:any) {
-    if (fileList.length >= 1) {
-      this.hideCoverUploadBtn = true
-    } else {
-      this.hideCoverUploadBtn = false
-    }
+  	if (fileList.length >= 1) {
+  		this.hideCoverUploadBtn = true
+  	} else {
+  		this.hideCoverUploadBtn = false
+  	}
   }
 
   private uploadRemove(file:any, fileList:any) {
-    this.uploadBtnVisable(fileList)
+  	this.uploadBtnVisable(fileList)
   }
 
   private uploadChange(file:any, fileList:any) {
-    this.uploadBtnVisable(fileList)
+  	this.uploadBtnVisable(fileList)
   }
 
   private uploadCardPreview(file:any) {
-    this.dialogImageUrl = file.url
-    this.dialogVisible = true
+  	this.dialogImageUrl = file.url
+  	this.dialogVisible = true
   }
 
   private uploadBtnVisable(fileList:any) {
-    if (fileList.length >= 6) {
-      this.hideUploadBtn = true
-    } else {
-      this.hideUploadBtn = false
-    }
+  	if (fileList.length >= 6) {
+  		this.hideUploadBtn = true
+  	} else {
+  		this.hideUploadBtn = false
+  	}
   }
 
   get specListVisiable():boolean {
-    if (this.formdata.specList[0].specName === '' ||
+  	if (this.formdata.specList[0].specName === '' ||
         this.formdata.specList[0].optionList[0].optionName === '') { return false }
-    return true
+  	return true
   }
 
   created() {
-    this.formdata = new FormData()
+  	this.formdata = new FormData()
   }
 
   @Watch('formdata.specList')
   onPropertyChanged(value: string) {
-    this.temp = [...this.specTable]
-    this.specTable = []
-    this.recursiveTempObj = {}
-    this.specListRecursive(value, 0)
-    this.modifySpecTable()
+  	this.temp = [...this.specTable]
+  	this.specTable = []
+  	this.recursiveTempObj = {}
+  	this.specListRecursive(value, 0)
+  	this.modifySpecTable()
   }
 }
 </script>

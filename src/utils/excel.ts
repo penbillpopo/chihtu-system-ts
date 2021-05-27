@@ -186,7 +186,7 @@ export const exportJson2Excel = (header: string[], data: any, filename = 'excel-
         return {
           wch: 10
         }
-      // 再判断是否为中文
+        // 再判断是否为中文
       } else if (val.toString().charCodeAt(0) > 255) {
         return {
           wch: val.toString().length * 2

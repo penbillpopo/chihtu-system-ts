@@ -35,48 +35,48 @@ export default class extends Vue {
   private show = false
 
   get theme() {
-    return SettingsModule.theme
+  	return SettingsModule.theme
   }
 
   @Watch('show')
   private onShowChange(value: boolean) {
-    if (value && !this.clickNotClose) {
-      this.addEventClick()
-    }
-    if (value) {
-      addClass(document.body, 'showRightPanel')
-    } else {
-      removeClass(document.body, 'showRightPanel')
-    }
+  	if (value && !this.clickNotClose) {
+  		this.addEventClick()
+  	}
+  	if (value) {
+  		addClass(document.body, 'showRightPanel')
+  	} else {
+  		removeClass(document.body, 'showRightPanel')
+  	}
   }
 
   mounted() {
-    this.insertToBody()
+  	this.insertToBody()
   }
 
   beforeDestroy() {
-    const elx = this.$refs.rightPanel as Element
-    elx.remove()
+  	const elx = this.$refs.rightPanel as Element
+  	elx.remove()
   }
 
   private addEventClick() {
-    window.addEventListener('click', this.closeSidebar)
+  	window.addEventListener('click', this.closeSidebar)
   }
 
   private closeSidebar(ev: MouseEvent) {
-    const parent = (ev.target as HTMLElement).closest('.rightPanel')
-    if (!parent) {
-      this.show = false
-      window.removeEventListener('click', this.closeSidebar)
-    }
+  	const parent = (ev.target as HTMLElement).closest('.rightPanel')
+  	if (!parent) {
+  		this.show = false
+  		window.removeEventListener('click', this.closeSidebar)
+  	}
   }
 
   private insertToBody() {
-    const elx = this.$refs.rightPanel as Element
-    const body = document.querySelector('body')
-    if (body) {
-      body.insertBefore(elx, body.firstChild)
-    }
+  	const elx = this.$refs.rightPanel as Element
+  	const body = document.querySelector('body')
+  	if (body) {
+  		body.insertBefore(elx, body.firstChild)
+  	}
   }
 }
 </script>

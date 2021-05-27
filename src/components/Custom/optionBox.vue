@@ -34,16 +34,16 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 })
 export default class extends Vue {
   @Prop() private optionList = {
-    type: Array,
-    default: () => []
+  	type: Array,
+  	default: () => []
   }
 
   private addOptionbox() {
-    this.$emit('addOptionbox')
+  	this.$emit('addOptionbox')
   }
 
   private deleteOptionbox() {
-    this.$emit('deleteOptionbox')
+  	this.$emit('deleteOptionbox')
   }
 }
 </script>

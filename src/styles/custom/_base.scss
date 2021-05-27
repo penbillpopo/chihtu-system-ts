@@ -260,7 +260,7 @@ span {
   }    
 }
 
-/* ----------table----------*/
+/* ----------table---------- */
 
 .tableGroup{
     margin-bottom: 30px;
@@ -287,4 +287,14 @@ span {
     font-weight: 700;
     margin: 0;
     margin-bottom: 10px;
-  }
+}
+
+/* ------ element ui ----- */
+.el-select{
+    display: block;
+    .el-input__suffix{
+        top: initial;
+        bottom: 0;
+        height: auto;
+    }
+}

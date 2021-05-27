@@ -19,17 +19,17 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   private option = 'email'
   private optionList = [{
-    value: 'email',
-    label: '帳號(信箱)'
+  	value: 'email',
+  	label: '帳號(信箱)'
   }, {
-    value: 'name',
-    label: '名稱'
+  	value: 'name',
+  	label: '名稱'
   }, {
-    value: 'phone',
-    label: '電話'
+  	value: 'phone',
+  	label: '電話'
   }, {
-    value: 'authority',
-    label: '權限'
+  	value: 'authority',
+  	label: '權限'
   }]
 }
 </script>

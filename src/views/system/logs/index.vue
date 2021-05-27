@@ -87,34 +87,34 @@ export default class extends Vue {
   //   }
   // },
   private tableData = [
-    {
-      email: 'pen@gmail.com',
-      name: 'Bill',
-      ip: '120.11.34.57',
-      status: '1',
-      loginAt: '2020/01/08 17:32:50'
-    },
-    {
-      email: 'jonny@gmail.com',
-      name: 'Jonny',
-      ip: '120.11.34.66',
-      status: '0',
-      loginAt: '2020/01/08 17:32:55'
-    }
+  	{
+  		email: 'pen@gmail.com',
+  		name: 'Bill',
+  		ip: '120.11.34.57',
+  		status: '1',
+  		loginAt: '2020/01/08 17:32:50'
+  	},
+  	{
+  		email: 'jonny@gmail.com',
+  		name: 'Jonny',
+  		ip: '120.11.34.66',
+  		status: '0',
+  		loginAt: '2020/01/08 17:32:55'
+  	}
   ]
 
   private pageData = {
-    pagesize: 25,
-    page: 1
+  	pagesize: 25,
+  	page: 1
   }
 
   private pageTotal = 0
   private handleSizeChange(val:any) {
-    this.pageData.pagesize = val
+  	this.pageData.pagesize = val
   }
 
   private handleCurrentChange(val:any) {
-    this.pageData.page = val
+  	this.pageData.page = val
   }
 }
 </script>

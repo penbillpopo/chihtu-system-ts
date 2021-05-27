@@ -15,15 +15,15 @@
         <lang-select class="set-language" />
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="account">
         <span class="svg-container">
           <svg-icon name="user" />
         </span>
         <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
+          ref="account"
+          v-model="loginForm.account"
+          :placeholder="$t('login.account')"
+          name="account"
           type="text"
           tabindex="1"
           autocomplete="on"
@@ -73,11 +73,11 @@
 
       <div style="position:relative">
         <div class="tips">
-          <span>{{ $t('login.username') }} : admin </span>
+          <span>{{ $t('login.account') }} : admin </span>
           <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
         </div>
         <div class="tips">
-          <span>{{ $t('login.username') }} : editor </span>
+          <span>{{ $t('login.account') }} : editor </span>
           <span>{{ $t('login.password') }} : {{ $t('login.any') }} </span>
         </div>
 
@@ -110,9 +110,10 @@ import { Route } from 'vue-router'
 import { Dictionary } from 'vue-router/types/router'
 import { Form as ElForm, Input } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
-import { isValidUsername } from '@/utils/validate'
+// import { isValidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect/index.vue'
 import SocialSign from './components/SocialSignin.vue'
+import { IQlogin } from '@/api/dto/system/login'
 
 @Component({
   name: 'Login',
@@ -123,30 +124,30 @@ import SocialSign from './components/SocialSignin.vue'
 })
 export default class extends Vue {
   private validateUsername = (rule: any, value: string, callback: Function) => {
-    // if (!isValidUsername(value)) {
-    //   callback(new Error('Please enter the correct user name'))
-    // } else {
-    //   callback()
-    // }
-    callback()
+  	// if (!isValidUsername(value)) {
+  	//   callback(new Error('Please enter the correct user name'))
+  	// } else {
+  	//   callback()
+  	// }
+  	callback()
   }
 
   private validatePassword = (rule: any, value: string, callback: Function) => {
-    if (value.length < 6) {
-      callback(new Error('The password can not be less than 6 digits'))
-    } else {
-      callback()
-    }
+  	if (value.length < 6) {
+  		callback(new Error('The password can not be less than 6 digits'))
+  	} else {
+  		callback()
+  	}
   }
 
-  private loginForm = {
-    username: 'penbillpopo@gmail.com',
-    password: '123456'
+  private loginForm:IQlogin = {
+  	account: 'penbillpopo@gmail.com',
+  	password: '123456'
   }
 
   private loginRules = {
-    username: [{ validator: this.validateUsername, trigger: 'blur' }],
-    password: [{ validator: this.validatePassword, trigger: 'blur' }]
+  	account: [{ validator: this.validateUsername, trigger: 'blur' }],
+  	password: [{ validator: this.validatePassword, trigger: 'blur' }]
   }
 
   private passwordType = 'password'
@@ -158,67 +159,67 @@ export default class extends Vue {
 
   @Watch('$route', { immediate: true })
   private onRouteChange(route: Route) {
-    // TODO: remove the "as Dictionary<string>" hack after v4 release for vue-router
-    // See https://github.com/vuejs/vue-router/pull/2050 for details
-    const query = route.query as Dictionary<string>
-    if (query) {
-      this.redirect = query.redirect
-      this.otherQuery = this.getOtherQuery(query)
-    }
+  	// TODO: remove the "as Dictionary<string>" hack after v4 release for vue-router
+  	// See https://github.com/vuejs/vue-router/pull/2050 for details
+  	const query = route.query as Dictionary<string>
+  	if (query) {
+  		this.redirect = query.redirect
+  		this.otherQuery = this.getOtherQuery(query)
+  	}
   }
 
   mounted() {
-    if (this.loginForm.username === '') {
-      (this.$refs.username as Input).focus()
-    } else if (this.loginForm.password === '') {
-      (this.$refs.password as Input).focus()
-    }
+  	if (this.loginForm.account === '') {
+  		(this.$refs.account as Input).focus()
+  	} else if (this.loginForm.password === '') {
+  		(this.$refs.password as Input).focus()
+  	}
   }
 
   private checkCapslock(e: KeyboardEvent) {
-    const { key } = e
-    this.capsTooltip = key !== null && key.length === 1 && (key >= 'A' && key <= 'Z')
+  	const { key } = e
+  	this.capsTooltip = key !== null && key.length === 1 && (key >= 'A' && key <= 'Z')
   }
 
   private showPwd() {
-    if (this.passwordType === 'password') {
-      this.passwordType = ''
-    } else {
-      this.passwordType = 'password'
-    }
-    this.$nextTick(() => {
-      (this.$refs.password as Input).focus()
-    })
+  	if (this.passwordType === 'password') {
+  		this.passwordType = ''
+  	} else {
+  		this.passwordType = 'password'
+  	}
+  	this.$nextTick(() => {
+  		(this.$refs.password as Input).focus()
+  	})
   }
 
   private handleLogin() {
-    (this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
-      if (valid) {
-        this.loading = true
-        await UserModule.Login(this.loginForm)
-        this.$router.push({
-          path: this.redirect || '/',
-          query: this.otherQuery
-        }).catch(err => {
-          console.warn(err)
-        })
-        // Just to simulate the time of the request
-        setTimeout(() => {
-          this.loading = false
-        }, 0.5 * 1000)
-      } else {
-        return false
-      }
-    })
+  	(this.$refs.loginForm as ElForm).validate(async(valid: boolean) => {
+  		if (valid) {
+  			this.loading = true
+  			await UserModule.Login(this.loginForm)
+  			this.$router.push({
+  				path: this.redirect || '/',
+  				query: this.otherQuery
+  			}).catch(err => {
+  				console.warn(err)
+  			})
+  			// Just to simulate the time of the request
+  			setTimeout(() => {
+  				this.loading = false
+  			}, 0.5 * 1000)
+  		} else {
+  			return false
+  		}
+  	})
   }
 
   private getOtherQuery(query: Dictionary<string>) {
-    return Object.keys(query).reduce((acc, cur) => {
-      if (cur !== 'redirect') {
-        acc[cur] = query[cur]
-      }
-      return acc
-    }, {} as Dictionary<string>)
+  	return Object.keys(query).reduce((acc, cur) => {
+  		if (cur !== 'redirect') {
+  			acc[cur] = query[cur]
+  		}
+  		return acc
+  	}, {} as Dictionary<string>)
   }
 }
 </script>

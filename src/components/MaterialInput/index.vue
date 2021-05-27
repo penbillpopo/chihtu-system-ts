@@ -153,51 +153,51 @@ export default class extends Vue {
 
   @Watch('value')
   private onValueChange(value: any) {
-    this.valueCopy = value
+  	this.valueCopy = value
   }
 
   get computedClasses() {
-    return {
-      'material--active': this.focus,
-      'material--disabled': this.disabled,
-      'material--raised': Boolean(this.focus || this.valueCopy)
-    }
+  	return {
+  		'material--active': this.focus,
+  		'material--disabled': this.disabled,
+  		'material--raised': Boolean(this.focus || this.valueCopy)
+  	}
   }
 
   get filledPlaceholder() {
-    if (this.focus) {
-      return this.placeholder
-    }
-    return ''
+  	if (this.focus) {
+  		return this.placeholder
+  	}
+  	return ''
   }
 
   private handleInput(event: KeyboardEvent) {
-    const value = (event.target as HTMLInputElement).value
-    this.$emit('input', value)
-    if (this.$parent.$options.name === 'ElFormItem') {
-      if (this.validateEvent) {
-        // See https://github.com/ElemeFE/element/blob/dev/packages/form/src/form-item.vue#L293
-        // eslint-disable-next-line vue/custom-event-name-casing
-        this.$parent.$emit('el.form.change', [value])
-      }
-    }
+  	const value = (event.target as HTMLInputElement).value
+  	this.$emit('input', value)
+  	if (this.$parent.$options.name === 'ElFormItem') {
+  		if (this.validateEvent) {
+  			// See https://github.com/ElemeFE/element/blob/dev/packages/form/src/form-item.vue#L293
+  			// eslint-disable-next-line vue/custom-event-name-casing
+  			this.$parent.$emit('el.form.change', [value])
+  		}
+  	}
   }
 
   private handleFocus(event: FocusEvent) {
-    this.focus = true
-    this.$emit('focus', event)
+  	this.focus = true
+  	this.$emit('focus', event)
   }
 
   private handleBlur(event: FocusEvent) {
-    this.focus = false
-    this.$emit('blur', event)
-    if (this.$parent.$options.name === 'ElFormItem') {
-      if (this.validateEvent) {
-        // See https://github.com/ElemeFE/element/blob/dev/packages/form/src/form-item.vue#L292
-        // eslint-disable-next-line vue/custom-event-name-casing
-        this.$parent.$emit('el.form.blur', [this.valueCopy])
-      }
-    }
+  	this.focus = false
+  	this.$emit('blur', event)
+  	if (this.$parent.$options.name === 'ElFormItem') {
+  		if (this.validateEvent) {
+  			// See https://github.com/ElemeFE/element/blob/dev/packages/form/src/form-item.vue#L292
+  			// eslint-disable-next-line vue/custom-event-name-casing
+  			this.$parent.$emit('el.form.blur', [this.valueCopy])
+  		}
+  	}
   }
 }
 </script>

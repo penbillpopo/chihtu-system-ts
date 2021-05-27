@@ -85,12 +85,12 @@ export default class extends Vue {
   private dialogTableVisible = false
 
   get errorLogs() {
-    return ErrorLogModule.logs
+  	return ErrorLogModule.logs
   }
 
   private clearAll() {
-    this.dialogTableVisible = false
-    ErrorLogModule.ClearErrorLog()
+  	this.dialogTableVisible = false
+  	ErrorLogModule.ClearErrorLog()
   }
 }
 </script>

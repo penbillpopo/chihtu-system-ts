@@ -21,13 +21,13 @@ export default class extends Vue {
   private currentRole = 'admin-dashboard'
 
   get roles() {
-    return UserModule.roles
+  	return UserModule.roles
   }
 
   created() {
-    if (!this.roles.includes('admin')) {
-      this.currentRole = 'editor-dashboard'
-    }
+  	if (!this.roles.includes('admin')) {
+  		this.currentRole = 'editor-dashboard'
+  	}
   }
 }
 </script>

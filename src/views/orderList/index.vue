@@ -86,46 +86,46 @@ import { Component, Vue } from 'vue-property-decorator'
 export default class extends Vue {
   /* data */
   private tableData = [
-    {
-      number: '0123456',
-      name: '鬍鬚張',
-      phone: '091234567',
-      orderDate: '2020/01/08 17:32:30',
-      orderState: '已付款',
-      total: '100',
-      payment: '信用卡'
-    },
-    {
-      number: '0123456',
-      name: '鬍鬚張',
-      phone: '091234567',
-      orderDate: '2020/01/08 17:32:30',
-      orderState: '已付款',
-      total: '100',
-      payment: '信用卡'
-    }
+  	{
+  		number: '0123456',
+  		name: '鬍鬚張',
+  		phone: '091234567',
+  		orderDate: '2020/01/08 17:32:30',
+  		orderState: '已付款',
+  		total: '100',
+  		payment: '信用卡'
+  	},
+  	{
+  		number: '0123456',
+  		name: '鬍鬚張',
+  		phone: '091234567',
+  		orderDate: '2020/01/08 17:32:30',
+  		orderState: '已付款',
+  		total: '100',
+  		payment: '信用卡'
+  	}
   ]
 
   private pageData = {
-    pagesize: 25,
-    page: 1
+  	pagesize: 25,
+  	page: 1
   }
 
   private pageTotal = 0
   /* method */
   private handleSizeChange(val:number) {
-    this.pageData.pagesize = val
+  	this.pageData.pagesize = val
   }
 
   private handleCurrentChange(val:number) {
-    this.pageData.page = val
+  	this.pageData.page = val
   }
 
   private openEdit(data:any) {
-    this.$router.push({
-      path: '/order/orderList/edit',
-      query: data
-    })
+  	this.$router.push({
+  		path: '/order/orderList/edit',
+  		query: data
+  	})
   }
 }
 </script>
