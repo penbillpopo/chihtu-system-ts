@@ -58,17 +58,18 @@ export const constantRoutes: RouteConfig[] = [
         }
       }
     ]
-  },
-  orderRouter,
-  productRouter,
-  systemRouter
+  }
 ]
 
 /**
  * asyncRoutes
  * the routes that need to be dynamically loaded based on user roles
 */
-export const asyncRoutes: RouteConfig[] = []
+export const asyncRoutes: RouteConfig[] = [
+  orderRouter,
+  productRouter,
+  systemRouter
+]
 
 const createRouter = () => new VueRouter({
   // mode: 'history',  // Disabled due to Github Pages doesn't support this, enable this if you need.

@@ -6,7 +6,7 @@
     <div class="page-body">
       <el-form ref="dataForm" :model="formdata" class="formBox">
         <div class="formRow">
-          <el-form-item label="商品名稱" prop="name">
+          <el-form-item label="商品名稱" prop="name" class="formItem">
             <el-input v-model="formdata.name" placeholder="請輸入商品名稱" />
           </el-form-item>
         </div>

@@ -1,5 +1,5 @@
 
-import { IQcreateUsers } from '@/api/dto/system/createUsers'
+import { IQcreateUsers } from '@/api/dto/system/users/createUsers'
 class CreateUsersF implements IQcreateUsers {
 	account = ''
 	password = ''

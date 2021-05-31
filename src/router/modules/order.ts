@@ -16,13 +16,13 @@ const orderRouter = {
       path: 'orderList',
       component: () => import('@/views/orderList/index.vue'),
       name: 'orderList',
-      meta: { title: 'orderView' }
+      meta: { title: 'orderView', role: 'checkOrderList' }
     },
     {
       path: 'orderList/edit',
       component: () => import('@/views/orderList/edit.vue'),
       name: 'orderList/edit',
-      meta: { title: 'orderEdit', hidden: true }
+      meta: { title: 'orderEdit', role: 'checkOrderList', hidden: true }
     }
   ],
   singleHasMenu: true

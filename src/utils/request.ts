@@ -58,16 +58,18 @@ service.interceptors.response.use(
     // } else {
     //   return response.data
     // }
-    if (res.success) {
-      return res
-    } else {
-      Message({
-        message: res.msg || 'Error',
-        type: 'error',
-        duration: 5 * 1000
-      })
-      return Promise.reject(new Error(res.msg || 'Error'))
-    }
+    // if (res.success) {
+    //   return res
+    // } else {
+    //   console.log(res)
+    //   Message({
+    //     message: res.msg || 'Error',
+    //     type: 'error',
+    //     duration: 5 * 1000
+    //   })
+    //   return Promise.reject(new Error(res.msg || 'Error'))
+    // }
+    return res
   },
   (error) => {
     Message({

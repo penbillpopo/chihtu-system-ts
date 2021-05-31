@@ -1,56 +1,91 @@
+interface IauthChildren{
+	major:string
+	minor:string[]
+}
 interface IauthTable{
 	name:string
 	head:string
-	children:string[]
+	children:IauthChildren[]
 }
+enum AuthChildType{
+	major,
+	minor
+}
+/*
+為了減少存進資料庫的字串長度，以所短編碼代替
+規則:
+第一個字母為自定義，小寫並且不可重複，一般為類別標頭第一個字。
+*/
 class AuthTable {
     static authTableList:Array<IauthTable> = [
     	{
     		name: 'system',
     		head: 's',
     		children: [
-    			'checkAccount',
-    			'editAccount',
-    			'checkAuthority',
-    			'editAuthority',
-    			'checkLogs',
-    			'editLogs',
-    			'checkBlacklist',
-    			'editBlacklist'
+          {
+            major: 'checkAccount',
+            minor: ['editAccount', 'deleteAccount']
+          },
+          {
+            major: 'checkAuthority',
+            minor: ['editAuthority', 'deleteAuthority']
+          },
+          {
+            major: 'checkLogs',
+            minor: ['editLogs', 'deleteLogs']
+          },
+          {
+            major: 'checkBlacklist',
+            minor: ['editBlacklist', 'deleteBlacklist']
+          }
     		]
     	},
     	{
     		name: 'product',
     		head: 'p',
     		children: [
-    			'checkProductList',
-    			'editProductList',
-    			'checkProductCategory',
-    			'editProductCategory',
-    			'checkShipCategory',
-    			'editShipCategory'
+          {
+            major: 'checkProductList',
+            minor: ['editProductList', 'deleteProductList']
+          },
+          {
+            major: 'checkProductCategory',
+            minor: ['editProductCategory', 'deleteProductCategory']
+          },
+          {
+            major: 'checkShipCategory',
+            minor: ['editShipCategory', 'deleteShipCategory']
+          }
     		]
     	},
     	{
     		name: 'order',
     		head: 'o',
     		children: [
-    			'checkOrderList',
-    			'editOrderList'
+          {
+            major: 'checkOrderList',
+            minor: ['editOrderList', 'deleteOrderList']
+          }
     		]
     	}
     ]
 
     static getAuthKeyByValue(value:string):string {
-    	let compareTxt = ''
     	for (let i = 0; i < AuthTable.authTableList.length; i++) {
     		const parent = AuthTable.authTableList[i]
     		for (let j = 0; j < parent.children.length; j++) {
     			const children = parent.children[j]
-    			compareTxt = parent.head + j.toString()
-    			if (compareTxt === value) {
-    				return children
-    			}
+          const headTxt = parent.head + j.toString()
+    			if (children.major === value) {
+    				return headTxt + 'J'
+    			} else {
+            for (let k = 0; k < children.minor.length; k++) {
+              const minor = children.minor[k]
+              if (minor === value) {
+                return headTxt + 'N' + k.toString()
+              }
+            }
+          }
     		}
     	}
     	return ''
@@ -58,19 +93,40 @@ class AuthTable {
 
     static getAuthValueByKey(key:string):string {
     	const compareHead = key[0]
-    	const compareBody = key.substr(1, 1)
-		for (let i = 0; i < AuthTable.authTableList.length; i++) {
-			const parent = AuthTable.authTableList[i];
-			if (parent.head === compareHead){
-				for (let j = 0; j < parent.children.length; j++) {
-					const children = parent.children[j];
-					if (j.toString() === compareBody){
-						return children
-					}
-				}
-			}
-		}
-		return ''
+    	const compareBody = key.substr(1, key.length - 1)
+    	let compareType:AuthChildType = AuthChildType.major
+      let codeArr = []; let code = ''; const authIndex = 0; const minorIndex = 0
+      if (compareBody.includes('J')) {
+        compareType = AuthChildType.major
+        code = 'J'
+      } else if (compareBody.includes('N')) {
+        compareType = AuthChildType.minor
+        code = 'N'
+      }
+      codeArr = compareBody.split(code)
+      for (let i = 0; i < AuthTable.authTableList.length; i++) {
+        const parent = AuthTable.authTableList[i]
+        if (parent.head === compareHead) {
+          for (let j = 0; j < parent.children.length; j++) {
+            const children = parent.children[j]
+            if (j.toString() === codeArr[0]) {
+              switch (compareType) {
+                case AuthChildType.major:
+                  return children.major
+                case AuthChildType.minor:
+                  for (let k = 0; k < children.minor.length; k++) {
+                    const minor = children.minor[k]
+                    if (k.toString() === codeArr[1]) {
+                      return minor
+                    }
+                  }
+                  break
+              }
+            }
+          }
+        }
+      }
+      return ''
     }
 }
 export { AuthTable }

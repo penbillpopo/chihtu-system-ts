@@ -8,32 +8,33 @@ const systemRouter = {
   name: 'System',
   meta: {
     title: 'systemSetting',
-    icon_element: 'setting'
+    icon_element: 'setting',
+    alwaysShow: true
   },
   children: [
     {
       path: 'account',
       component: () => import('@/views/system/account/index.vue'),
       name: 'account',
-      meta: { title: 'accountManage' }
+      meta: { title: 'accountManage', role: 'checkAccount' }
     },
     {
       path: 'authority',
       component: () => import('@/views/system/authority/index.vue'),
       name: 'authority',
-      meta: { title: 'roleManage' }
+      meta: { title: 'roleManage', role: 'checkAuthority' }
     },
     {
       path: 'logs',
       component: () => import('@/views/system/logs/index.vue'),
       name: 'logs',
-      meta: { title: 'loginRecord' }
+      meta: { title: 'loginRecord', role: 'checkLogs' }
     },
     {
       path: 'blacklist',
       component: () => import('@/views/system/blacklist/index.vue'),
       name: 'blacklist',
-      meta: { title: 'blackList' }
+      meta: { title: 'blackList', role: 'checkBlacklist' }
     }
 
   ]

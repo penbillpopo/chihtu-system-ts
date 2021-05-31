@@ -53,7 +53,7 @@
             <template slot-scope="scope">
               <div>
                 <el-button type="primary" size="mini" @click="openDialogEdit(scope.$index)">編輯</el-button>
-                <el-button type="danger" size="mini">刪除</el-button>
+                <el-button type="danger" size="mini" @click="handleDelete(scope.$index)">刪除</el-button>
               </div>
             </template>
           </el-table-column>
@@ -70,19 +70,22 @@
           />
         </div>
       </div>
-      <Dialog ref="dialog" />
+      <Dialog ref="dialog" :rolesOption="rolesOption" @updateData="updateData"/>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-
 import searchPanel from './searchPanel.vue'
 import Dialog from './dialog.vue'
 import { Component, Vue } from 'vue-property-decorator'
-import { getUsers } from '@/api/system'
-import { ISgetUsers } from '@/api/dto/system/getUsers'
+import { getUsers, getRolesSelect, deleteUser } from '@/api/system'
+import { ISgetUsers } from '@/api/dto/system/users/getUsers'
 import { IndexTF, ITindex } from './format/indexTF'
+import { Iselect } from '@/share/select'
+import { ISgetRolesSelect } from '@/api/dto/system/roles/getRolesSelect'
+import { ResponseMsg, MsgType } from '@/share/message'
+import { ISnoData } from '@/api/dto/common/resNoData'
 
 @Component({
   name: 'Account',
@@ -99,18 +102,23 @@ export default class extends Vue {
   }
 
   private pageTotal = 0
-
+  private rolesOption:Iselect[] = []
   mounted() {
     this.initData()
   }
 
   private initData() {
+    this.tableData = []
   	getUsers().then((res:any) => {
   		const resData:ISgetUsers = res
   		resData.data.content.forEach(element => {
         const { account, name, roleName, status, updatedAt, id, roleId } = element
   			this.tableData.push(new IndexTF(account, name, roleName, status === '1', updatedAt, id, roleId))
   		})
+  	})
+    getRolesSelect().then((res:any) => {
+      const resData:ISgetRolesSelect = res
+      this.rolesOption = [...resData.data.content]
   	})
   }
 
@@ -140,6 +148,23 @@ export default class extends Vue {
 
   private statusText(status:boolean) {
   	return status ? '啟用' : '停用'
+  }
+
+  private updateData(isSuccess:Boolean, msg:string) {
+    ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
+    this.initData()
+  }
+
+  private handleDelete(index:number) {
+    const deleteId = this.tableData[index].id
+    deleteUser({ id: deleteId }).then((res:any) => {
+  		const resData:ISnoData = res
+      if (resData.success) {
+        this.updateData(true, resData.msg)
+      } else {
+        this.updateData(false, resData.msg)
+      }
+  	})
   }
 }
 </script>

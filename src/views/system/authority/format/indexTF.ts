@@ -9,12 +9,14 @@ class IndexTF implements ITindex {
     roles = ''
     updatedAt = ''
     id = ''
+    oriRoles =''
     constructor(name = '', roles = '',
-    	updatedAt = '', id = '') {
+    	updatedAt = '', id = '', oriRoles = '') {
     	this.name = name
     	this.roles = roles
     	this.updatedAt = updatedAt
     	this.id = id
+      this.oriRoles = oriRoles
     }
 }
 export { IndexTF, ITindex }

@@ -1,4 +1,3 @@
-
 @import "./common/mixin.scss";
 @import "./common/extend.scss";
 @import "./common/function.scss";
@@ -23,7 +22,7 @@ h5 {
 }
 p,
 ul,
-li{
+li {
   @include fontInfo($font-size-06, $color-black-01, 1.3, $font-family-01);
 }
 small {
@@ -62,239 +61,242 @@ span {
 
 .page-container {
   width: 100%;
-  &.hasBottomField{
-      .page-body{
-          padding-bottom: 60px;
-      }
+  &.hasBottomField {
+    .page-body {
+      padding-bottom: 60px;
+    }
   }
-  .bottomField{
-      width: 100%;
-      position: fixed;
-      bottom: 0;
-      right: 0;
-      padding: 12px 40px;
-      background-color: #fff;
-      box-shadow: 5px -3px 3px rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: flex-end;
-      @media screen and (max-width: 768px) {
-          padding: 12px 20px;
-      }
+  .bottomField {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 12px 40px;
+    background-color: #fff;
+    box-shadow: 5px -3px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    @media screen and (max-width: 768px) {
+      padding: 12px 20px;
+    }
   }
-  .page-body{
-      width: 100%;
-      height: 100%;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      .search-panel {
-          padding-top: 10px;
-          padding-bottom: 20px;
-          margin-bottom: 20px;
-          border-bottom: 1px solid #dfe6ec;
-          .el-form-item__content{
-              width: 100%;
-          }
-          .el-form-item{
-              &.small-gap{
-                  margin-right: 10px;
-              }
-              &.big-gap{
-                  margin-right: 30px;
-              }
-              margin-bottom: 10px;
-          }
-          .el-button{
-              height: 36px;
-              display: block;
-          }
-          .search-form{
-              display: flex;
-              .el-form-item{
-                  display: flex;
-  
-              }
-          }
-          @media screen and (max-width: 768px) {
-              .el-form-item__content{
-                  width: 100%;
-              }
-              .el-date-editor.el-input{
-                  width: 100%;
-              }
-              .el-form-item{
-                  &.small-gap{
-                      margin-right: 0px;
-                  }
-                  &.big-gap{
-                      margin-right: 0px;
-                  }
-              }
-              .search-form{
-                  flex-direction: column;
-              }
-              .el-date-editor.el-input{
-                  width: 100%;
-              }
-          }
+  .page-body {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    .search-panel {
+      padding-top: 10px;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #dfe6ec;
+      .el-form-item__content {
+        width: 100%;
       }
-      .head-container{
-          width: 100%;
+      .el-form-item {
+        &.small-gap {
+          margin-right: 10px;
+        }
+        &.big-gap {
+          margin-right: 30px;
+        }
+        margin-bottom: 10px;
+      }
+      .el-button {
+        height: 36px;
+        display: block;
+      }
+      .search-form {
+        display: flex;
+        .el-form-item {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 10px;
-          .title{
-              margin: 0;
-              font-size: 18px;
-              color: #3e4042;
-              font-weight: bold;
-          }
-      }
-      .table-container {
-          .table-form {
-              border: 1px solid #dfe6ec;
-              border-bottom: 0;
-              .el-form-item {
-                  margin-bottom:0
-              }
-              .el-form-item__label {
-                  color:#909399;
-                  height: 44px;
-                  line-height: 23px;
-                  font-weight: unset;
-                  border-right: 1px solid #dfe6ec;
-                  border-bottom: 1px solid #dfe6ec;
-                  padding: 10px;
-              }
-              .el-form-item__content {
-                  color: #606266;
-                  height: 44px;
-                  line-height: 23px;
-                  border-right: 1px solid #dfe6ec;
-                  border-bottom: 1px solid #dfe6ec;
-                  padding: 10px;
-              }
-          }
-          .table-pagination {
-              display: flex;
-              align-items: center;
-              justify-content: flex-end;
-              height: 44px;
-              border: 1px solid #dfe6ec;
-              border-top: 0;
-              @media screen and (max-width: 768px) {
-                  .el-pagination{
-                      .el-pagination__sizes{
-                          display: none;
-                      }
-                      .el-pagination__jump{
-                          display: none;
-                      }
-                  }
-              }
-          }
-          .el-button{
-              margin: 5px;
-              margin-left: 0;
-          }
-      }
-      .formBox{
-          .formRow{
-              width: 100%;
-              display: flex;
-              justify-content: space-between;
-              margin-bottom: 20px;
-              &.all{
-                  flex-direction: column;
-                  .el-form-item{
-                      width: 100%;
-                      margin-right: 0px;
-                  }
-                  &.reduce .el-form-item{
-                      width: calc(100% - 30px);
-                  }
-              }
-              .el-form-item{
-                  width: calc(50% - 7.5px);
-                  margin-bottom: 0;            
-                  &.flex{
-                      display: flex;
-                      align-items: center;
-                  }
-              }
-              @media screen and (max-width: 768px) {
-                  flex-direction: column;
-                  .el-form-item{
-                      width: 100%;
-                      margin-right: 0px;
-                  }
-              }
-          }
-      }
-      .dialog-container{
-          .el-dialog{
-              width: 90%;
-              max-width: 1000px;
-              .el-dialog__body{
-                  max-height: 400px;
-                  overflow-y: auto;
-                  @include scrollcontainer();
-              }
-              .el-form-item__label{
-                  line-height: 2;
-              }
-          }
-          &.small{
-              .el-dialog{
-                  max-width: 600px;                
-              }
-          }
+        }
       }
       @media screen and (max-width: 768px) {
-          .formBox{
-            padding: 0;
+        .el-form-item__content {
+          width: 100%;
+        }
+        .el-date-editor.el-input {
+          width: 100%;
+        }
+        .el-form-item {
+          &.small-gap {
+            margin-right: 0px;
           }
+          &.big-gap {
+            margin-right: 0px;
+          }
+        }
+        .search-form {
+          flex-direction: column;
+        }
+        .el-date-editor.el-input {
+          width: 100%;
+        }
       }
-  }    
+    }
+    .head-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      .title {
+        margin: 0;
+        font-size: 18px;
+        color: #3e4042;
+        font-weight: bold;
+      }
+    }
+    .table-container {
+      .table-form {
+        border: 1px solid #dfe6ec;
+        border-bottom: 0;
+        .el-form-item {
+          margin-bottom: 0;
+        }
+        .el-form-item__label {
+          color: #909399;
+          height: 44px;
+          line-height: 23px;
+          font-weight: unset;
+          border-right: 1px solid #dfe6ec;
+          border-bottom: 1px solid #dfe6ec;
+          padding: 10px;
+        }
+        .el-form-item__content {
+          color: #606266;
+          height: 44px;
+          line-height: 23px;
+          border-right: 1px solid #dfe6ec;
+          border-bottom: 1px solid #dfe6ec;
+          padding: 10px;
+        }
+      }
+      .table-pagination {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        height: 44px;
+        border: 1px solid #dfe6ec;
+        border-top: 0;
+        @media screen and (max-width: 768px) {
+          .el-pagination {
+            .el-pagination__sizes {
+              display: none;
+            }
+            .el-pagination__jump {
+              display: none;
+            }
+          }
+        }
+      }
+      .el-button {
+        margin: 5px;
+        margin-left: 0;
+      }
+    }
+    .formBox {
+      .formRow {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        &.all {
+          flex-direction: column;
+          .el-form-item {
+            width: 100%;
+            margin-right: 0px;
+          }
+          &.reduce .el-form-item {
+            width: calc(100% - 30px);
+          }
+        }
+        .el-form-item {
+          width: calc(50% - 7.5px);
+          margin-bottom: 0;
+          &.flex {
+            display: flex;
+            align-items: center;
+          }
+        }
+        @media screen and (max-width: 768px) {
+          flex-direction: column;
+          margin-bottom: 0px;
+          .el-form-item {
+            width: 100%;
+            margin-right: 0px;
+            margin-bottom: 10px;
+          }
+        }
+      }
+      @media screen and (max-width: 768px) {
+        padding: 0;
+      }
+    }
+    .dialog-container {
+      .el-dialog {
+        width: 90%;
+        max-width: 1000px;
+        .el-dialog__body {
+          max-height: 400px;
+          overflow-y: auto;
+          @include scrollcontainer();
+        }
+        .el-form-item__label {
+          line-height: 2;
+        }
+      }
+      &.small {
+        .el-dialog {
+          max-width: 600px;
+        }
+      }
+    }
+  }
 }
 
 /* ----------table---------- */
 
-.tableGroup{
-    margin-bottom: 30px;
-    table, th, td {
-      border: 1px solid #dfe6ec;
-      font-size: 14px;
-      @include fontInfo(14px, #606266, 1.3, $font-family-01);
-    }
-    table{
-      width: 100%;
-    }
-    td{
-        padding: 10px;
-        width:fit-content;
-        &.name{
-            width: 150px;
-        }
-    }
-    
-}
-.rowTitle{
+.tableGroup {
+  margin-bottom: 30px;
+  table,
+  th,
+  td {
+    border: 1px solid #dfe6ec;
     font-size: 14px;
-    color: #606266;
-    font-weight: 700;
-    margin: 0;
-    margin-bottom: 10px;
+    @include fontInfo(14px, #606266, 1.3, $font-family-01);
+  }
+  table {
+    width: 100%;
+  }
+  td {
+    padding: 10px;
+    width: fit-content;
+    &.name {
+      width: 150px;
+    }
+  }
+}
+.rowTitle {
+  font-size: 14px;
+  color: #606266;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 10px;
 }
 
 /* ------ element ui ----- */
-.el-select{
-    display: block;
-    .el-input__suffix{
-        top: initial;
-        bottom: 0;
-        height: auto;
-    }
+.el-select {
+  display: block;
+  .el-input__suffix {
+    top: initial;
+    bottom: 0;
+    height: auto;
+  }
+}
+.el-switch__core {
+  margin-bottom: 10px;
 }

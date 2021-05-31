@@ -2,10 +2,11 @@ import { VuexModule, Module, Mutation, Action, getModule } from 'vuex-module-dec
 import { RouteConfig } from 'vue-router'
 import { asyncRoutes, constantRoutes } from '@/router'
 import store from '@/store'
+import { AuthTable } from '@/share/authTable'
 
 const hasPermission = (roles: string[], route: RouteConfig) => {
-  if (route.meta && route.meta.roles) {
-    return roles.some(role => route.meta.roles.includes(role))
+  if (route.meta.role) {
+    return roles.some(role => route.meta.role.includes(AuthTable.getAuthValueByKey(role)))
   } else {
     return true
   }
@@ -43,12 +44,7 @@ class Permission extends VuexModule implements IPermissionState {
 
   @Action
   public GenerateRoutes(roles: string[]) {
-  	let accessedRoutes
-  	if (roles.includes('admin')) {
-  		accessedRoutes = asyncRoutes
-  	} else {
-  		accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-  	}
+  	const accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
   	this.SET_ROUTES(accessedRoutes)
   }
 }

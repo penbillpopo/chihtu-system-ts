@@ -35,10 +35,10 @@
             label="操作"
             width="200"
           >
-            <template>
+            <template slot-scope="scope">
               <div>
                 <el-button type="primary" size="mini" @click="openDialogEdit(scope.$index)">編輯</el-button>
-                <el-button type="danger" size="mini">刪除</el-button>
+                <el-button type="danger" size="mini" @click="handleDelete(scope.$index)">刪除</el-button>
               </div>
             </template>
           </el-table-column>
@@ -55,7 +55,7 @@
           />
         </div>
       </div>
-      <Dialog ref="dialog" />
+      <Dialog ref="dialog" @updateData="updateData"/>
     </div>
   </div>
 </template>
@@ -64,8 +64,11 @@ import { Component, Vue } from 'vue-property-decorator'
 import searchPanel from './searchPanel.vue'
 import Dialog from './dialog.vue'
 import { IndexTF, ITindex } from './format/indexTF'
-import { IgetRoles } from '@/api/dto/system/getRoles'
-import { getRoles } from '@/api/system'
+import { ISgetRoles } from '@/api/dto/system/roles/getRoles'
+import { getRoles, deleteRoles } from '@/api/system'
+import { AuthTable } from '@/share/authTable'
+import { ResponseMsg, MsgType } from '@/share/message'
+import { ISnoData } from '@/api/dto/common/resNoData'
 
 @Component({
   name: 'Authority',
@@ -87,19 +90,52 @@ export default class extends Vue {
   private handleCurrentChange(val:any) {
   	this.pageData.page = val
   }
+
   mounted() {
     this.initData()
   }
 
   private initData() {
+    this.tableData = []
   	getRoles().then((res:any) => {
-  		const resData:IgetRoles = res
+  		const resData:ISgetRoles = res
   		resData.data.content.forEach(element => {
-        const { name, roles,updatedAt ,id } = element
-  			this.tableData.push(new IndexTF(name, roles, updatedAt, id))
+        const { name, roles, updatedAt, id } = element
+        const rolesI18 = this.changeCodeToRoles(roles, true)
+        const oriRoles = this.changeCodeToRoles(roles, false)
+  			this.tableData.push(new IndexTF(name, rolesI18, updatedAt, id, oriRoles))
   		})
   	})
   }
+
+  private changeCodeToRoles(roles:string, isI18:boolean) {
+    const codeArr = roles.split(',')
+    let decodeArr = null
+    if (isI18) {
+      decodeArr = codeArr.map(roles => ' ' + this.$t('authority.' + AuthTable.getAuthValueByKey(roles)))
+    } else {
+      decodeArr = codeArr.map(roles => AuthTable.getAuthValueByKey(roles))
+    }
+    return decodeArr.toString()
+  }
+
+  private updateData(isSuccess:Boolean, msg:string) {
+    ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
+    this.initData()
+  }
+
+  private handleDelete(index:number) {
+    const deleteId = this.tableData[index].id
+    deleteRoles({ id: deleteId }).then((res:any) => {
+  		const resData:ISnoData = res
+      if (resData.success) {
+        this.updateData(true, resData.msg)
+      } else {
+        this.updateData(false, resData.msg)
+      }
+  	})
+  }
+
   private openDialogCreate() {
     const formdata:ITindex = new IndexTF()
     const dialog:any = this.$refs.dialog

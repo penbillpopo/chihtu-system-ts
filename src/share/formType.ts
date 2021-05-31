@@ -3,4 +3,4 @@ enum FormMode{
     edit
 }
 
-export {FormMode}
+export { FormMode }
