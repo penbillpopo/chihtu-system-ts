@@ -4,7 +4,7 @@
       <searchPanel />
       <div class="head-container">
         <p class="title">商品總覽</p>
-        <el-button icon="el-icon-plus" type="primary" size="mini" @click="openEdit()">
+        <el-button icon="el-icon-plus" type="primary" size="mini" @click="openDialogCreate">
           新增商品
         </el-button>
       </div>
@@ -20,25 +20,16 @@
             min-width="120"
           />
           <el-table-column
-            prop="number"
-            label="商品貨號"
+            prop="status"
+            label="狀態"
             min-width="120"
-          />
-          <el-table-column
-            prop="spec"
-            label="規格"
-            min-width="120"
-          />
-          <el-table-column
-            prop="price"
-            label="價格"
-            min-width="120"
-          />
-          <el-table-column
-            prop="sales"
-            label="已售出"
-            min-width="120"
-          />
+          >
+            <template slot-scope="{row}">
+              <el-tag :type="statusColor(row.status)">
+                {{ statusText(row.status) }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column
             prop="updatedAt"
             label="最後更新時間"
@@ -48,10 +39,10 @@
           <el-table-column
             label="操作"
           >
-            <template>
+            <template slot-scope="scope">
               <div>
-                <el-button type="primary" size="mini" @click="openEdit()">編輯</el-button>
-                <el-button type="danger" size="mini">刪除</el-button>
+                <el-button type="primary" size="mini" @click="openDialogEdit(scope.$index)">編輯</el-button>
+                <el-button type="danger" size="mini" @click="handleDelete(scope.$index)">刪除</el-button>
               </div>
             </template>
           </el-table-column>
@@ -75,6 +66,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import searchPanel from './searchPanel.vue'
+import { getProducts,deleteProducts } from '@/api/product'
+import { IndexTF, ITindex } from './format/indexTF'
+import { ISgetProdcut } from '@/api/dto/product/list/getProduct'
+import { ProductModule } from '@/store/modules/custom/product'
+import { ResponseMsg, MsgType } from '@/share/message'
+import { ISnoData } from '@/api/dto/common/resNoData'
+
 @Component({
   name: 'Account',
   components: {
@@ -82,24 +80,7 @@ import searchPanel from './searchPanel.vue'
   }
 })
 export default class extends Vue {
-  private tableData = [
-  	{
-  		name: '哥吉拉',
-  		number: '0123456789',
-  		spec: '大',
-  		price: '3000',
-  		sales: '12',
-  		updatedAt: '2020/01/08 17:32:50'
-  	},
-  	{
-  		name: '哥吉拉',
-  		number: '0123456788',
-  		spec: '小',
-  		price: '2000',
-  		sales: '10',
-  		updatedAt: '2020/01/08 17:32:30'
-  	}
-  ]
+  private tableData:ITindex[] = []
 
   private pageData = {
   	pagesize: 25,
@@ -107,6 +88,39 @@ export default class extends Vue {
   }
 
   private pageTotal = 0
+  private categoryOption:any = []
+
+  mounted() {
+    this.initData()
+    this.initProductModule()
+  }
+
+  private statusColor(status:boolean) {
+  	return status ? 'success' : 'info'
+  }
+
+  private statusText(status:boolean) {
+  	return status ? '啟用' : '停用'
+  }
+
+  private initData() {
+    this.tableData = []
+  	getProducts().then((res:any) => {
+  		const resData:ISgetProdcut = res
+  		resData.data.content.forEach(element => {
+        const { id, name, status, updatedAt } = element
+  			this.tableData.push(new IndexTF(id, name, status === 1, updatedAt))
+  		})
+  	})
+  }
+
+  private initProductModule() {
+    if (ProductModule.isIndexRead) {
+      ResponseMsg(ProductModule.isSuccess ? MsgType.success : MsgType.failure, ProductModule.msg)
+      ProductModule.resetIndexProduct()
+    }
+  }
+
   private handleSizeChange(val:any) {
   	this.pageData.pagesize = val
   }
@@ -115,11 +129,34 @@ export default class extends Vue {
   	this.pageData.page = val
   }
 
-  private openEdit(data:any) {
+  private openDialogCreate() {
+  	this.$router.push({
+  		path: '/product/productList/edit'
+  	})
+  }
+
+  private openDialogEdit(index:number) {
   	this.$router.push({
   		path: '/product/productList/edit',
-  		query: data
+      query:{
+        id:this.tableData[index].id
+      }
   	})
+  }
+  private handleDelete(index:number) {
+    const deleteId = this.tableData[index].id
+    deleteProducts({ id: deleteId }).then((res:any) => {
+  		const resData:ISnoData = res
+      if (resData.success) {
+        this.updateData(true, resData.msg)
+      } else {
+        this.updateData(false, resData.msg)
+      }
+  	})
+  }
+  private updateData(isSuccess:boolean, msg:string) {
+    ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
+    this.initData()
   }
 }
 </script>

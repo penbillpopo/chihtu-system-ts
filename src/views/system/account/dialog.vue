@@ -39,8 +39,8 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import { IndexTF } from './format/indexTF'
 import { DialogTF, ITdialog } from './format/dialogTF'
-import { CreateUsersF } from './format/createUsersF'
-import { UpdateUsersF } from './format/updateUsersF'
+import { IQcreateUsers } from '@/api/dto/system/users/createUsers'
+import { IQupdateUsers } from '@/api/dto/system/users/updateUsers'
 import { createUsers, updateUser } from '@/api/system'
 import { FormMode } from '@/share/formType'
 import { Iselect, findSelectIdByName } from '@/share/select'
@@ -78,17 +78,16 @@ export default class extends Vue {
   }
 
   private submitForm() {
-    let formData:any = null
   	switch (this.formMode) {
   	case FormMode.create:
-  		formData = new CreateUsersF(
-  			this.formdata.account,
-  			this.formdata.password,
-  			this.formdata.name,
-  			findSelectIdByName(this.rolesOption, this.formdata.roleName),
-  			this.formdata.status ? '1' : '0'
-  		)
-  		createUsers(formData).then((res:any) => {
+  		const createFormData:IQcreateUsers = {
+          account: this.formdata.account,
+  		  password: this.formdata.password,
+  			name: this.formdata.name,
+  			roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
+  			status: this.formdata.status ? '1' : '0'
+        }
+  		createUsers(createFormData).then((res:any) => {
           const resData:ISnoData = res
   			if (resData.success) {
             this.$emit('updateData', true, resData.msg)
@@ -99,14 +98,14 @@ export default class extends Vue {
   		})
   		break
   	case FormMode.edit:
-        formData = new UpdateUsersF(
-  			this.formdata.id,
-  			this.formdata.account,
-  			this.formdata.name,
-  			findSelectIdByName(this.rolesOption, this.formdata.roleName),
-  			this.formdata.status ? '1' : '0'
-  		)
-  		updateUser(formData).then((res:any) => {
+        const updateFormData:IQupdateUsers = {
+          id: this.formdata.id,
+  			account: this.formdata.account,
+  			name: this.formdata.name,
+  			roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
+  			status: this.formdata.status ? '1' : '0'
+        }
+  		updateUser(updateFormData).then((res:any) => {
           const resData:ISnoData = res
   			if (resData.success) {
             this.$emit('updateData', true, resData.msg)
@@ -118,10 +117,6 @@ export default class extends Vue {
   		break
   	}
   }
-  // @Watch('rolesOption', { immediate: true, deep: true })
-  // OnformdataChange(value: string) {
-  //   console.log(value)
-  // }
 }
 </script>
 <style scoped lang="scss">

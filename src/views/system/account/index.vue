@@ -150,7 +150,7 @@ export default class extends Vue {
   	return status ? '啟用' : '停用'
   }
 
-  private updateData(isSuccess:Boolean, msg:string) {
+  private updateData(isSuccess:boolean, msg:string) {
     ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
     this.initData()
   }

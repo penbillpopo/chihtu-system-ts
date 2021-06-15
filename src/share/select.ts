@@ -10,6 +10,7 @@ function findSelectIdByName(arr:Iselect[], name:string) {
       return element.id
     }
   }
+  return ''
 }
 function findSelectNameById(arr:Iselect[], id:string) {
   for (let i = 0; i < arr.length; i++) {

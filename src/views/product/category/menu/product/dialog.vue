@@ -17,7 +17,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary">確認</el-button>
+        <el-button type="primary" @click="submitForm">確認</el-button>
       </div>
     </el-dialog>
   </div>
@@ -26,9 +26,13 @@
 <script lang="ts">
 import optionBox from '@/components/Custom/optionBox.vue'
 import { Component, Vue } from 'vue-property-decorator'
-class OptionData {
-  optionName = ''
-}
+import { IndexTF } from './format/indexTF'
+import { FormMode } from '@/share/formType'
+import { DialogTF, OptionData } from './format/dialogTF'
+import { IQcreateProdCategory } from '@/api/dto/product/prodCategory/createProdCategory'
+import { IQupdateProdCategory } from '@/api/dto/product/prodCategory/updateProdCategory'
+import { createProdCategory, updateProdCategory } from '@/api/product'
+import { ISnoData } from '@/api/dto/common/resNoData'
 
 @Component({
   name: 'Dialog',
@@ -39,13 +43,27 @@ class OptionData {
 export default class extends Vue {
   private formdata:any = {}
   private dialogVisible = false
+  private formMode:FormMode = FormMode.create
+  get isCreateMode() {
+    return this.formMode === FormMode.create
+  }
+
   private handleClose() {
   	this.dialogVisible = false
   }
 
-  private handleOpen(formdata:any) {
+  private handleOpen(formdata:IndexTF, editId:number) {
   	this.dialogVisible = true
-  	this.formdata = Object.assign({}, formdata)
+    this.formMode = editId === undefined ? FormMode.create : FormMode.edit
+    switch (this.formMode) {
+      case FormMode.create:
+        this.formdata = new DialogTF()
+        break
+      case FormMode.edit:
+        this.formdata = new DialogTF(formdata.name, formdata.secondCategory,
+          formdata.id)
+        break
+    }
   }
 
   private addOptionbox() {
@@ -54,6 +72,44 @@ export default class extends Vue {
 
   private deleteOptionbox(index:number) {
   	this.formdata.optionList.splice(index, 1)
+  }
+
+  private submitForm() {
+    const categoryList:Array<any> = this.formdata.optionList
+    this.formdata.secondCategory = categoryList.map(item => item.optionName).toString()
+  	switch (this.formMode) {
+      case FormMode.create:
+        const createFormData:IQcreateProdCategory = {
+          name: this.formdata.name,
+          secondCategory: this.formdata.secondCategory
+        }
+        createProdCategory(createFormData).then((res:any) => {
+          const resData:ISnoData = res
+          if (resData.success) {
+            this.$emit('updateData', true, resData.msg)
+          } else {
+            this.$emit('updateData', false, resData.msg)
+          }
+          this.handleClose()
+        })
+        break
+      case FormMode.edit:
+        const updateFormData:IQupdateProdCategory = {
+          id: this.formdata.id,
+          name: this.formdata.name,
+          secondCategory: this.formdata.secondCategory
+        }
+        updateProdCategory(updateFormData).then((res:any) => {
+          const resData:ISnoData = res
+          if (resData.success) {
+            this.$emit('updateData', true, resData.msg)
+          } else {
+            this.$emit('updateData', false, resData.msg)
+          }
+          this.handleClose()
+        })
+        break
+  	}
   }
 }
 </script>

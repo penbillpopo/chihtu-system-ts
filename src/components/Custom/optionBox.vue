@@ -27,16 +27,13 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 
 @Component({
   name: 'OptionBox'
 })
 export default class extends Vue {
-  @Prop() private optionList = {
-  	type: Array,
-  	default: () => []
-  }
+  @Prop({ type: Array, default: () => [] }) private optionList:any
 
   private addOptionbox() {
   	this.$emit('addOptionbox')
@@ -45,6 +42,10 @@ export default class extends Vue {
   private deleteOptionbox() {
   	this.$emit('deleteOptionbox')
   }
+  // @Watch('optionList',{ immediate: true,deep:true })
+  // onPropertyChanged(value: string) {
+  //   console.log(value)
+  // }
 }
 </script>
 <style scoped lang="scss">

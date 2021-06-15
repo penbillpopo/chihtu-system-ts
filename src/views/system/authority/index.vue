@@ -119,7 +119,7 @@ export default class extends Vue {
     return decodeArr.toString()
   }
 
-  private updateData(isSuccess:Boolean, msg:string) {
+  private updateData(isSuccess:boolean, msg:string) {
     ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
     this.initData()
   }

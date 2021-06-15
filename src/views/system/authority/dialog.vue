@@ -50,8 +50,8 @@ import { AuthTable } from '@/share/authTable'
 import { IndexTF } from './format/indexTF'
 import { DialogTF } from './format/dialogTF'
 import { FormMode } from '@/share/formType'
-import { CreateRolesF } from './format/createRolesF'
-import { UpdateRolesF } from './format/updateRolesF'
+import { IQcreateRoles } from '@/api/dto/system/roles/createRoles'
+import { IQupdateRoles } from '@/api/dto/system/roles/updateRoles'
 import { createRoles, updateRoles } from '@/api/system'
 import { ISnoData } from '@/api/dto/common/resNoData'
 
@@ -93,39 +93,38 @@ export default class extends Vue {
   }
 
   private submitForm() {
-    let formData:any = null
-  	switch (this.formMode) {
-  	case FormMode.create:
-  		formData = new CreateRolesF(
-  			this.formdata.name,
-  			this.changeRolesToCode(this.formdata.roles)
-  		)
-  		createRoles(formData).then((res:any) => {
-  		  const resData:ISnoData = res
-  			if (resData.success) {
-            this.$emit('updateData', true, resData.msg)
-  			} else {
-            this.$emit('updateData', false, resData.msg)
-  			}
-          this.handleClose()
-  		})
-  		break
-  	case FormMode.edit:
-        formData = new UpdateRolesF(
-  			this.formdata.id,
-  			this.formdata.name,
-  			this.changeRolesToCode(this.formdata.roles)
-  		)
-  		updateRoles(formData).then((res:any) => {
+    switch (this.formMode) {
+      case FormMode.create:
+        const createFormData:IQcreateRoles = {
+          name: this.formdata.name,
+          roles: this.changeRolesToCode(this.formdata.roles)
+        }
+        createRoles(createFormData).then((res:any) => {
           const resData:ISnoData = res
-  			if (resData.success) {
+          if (resData.success) {
             this.$emit('updateData', true, resData.msg)
-  			} else {
+          } else {
             this.$emit('updateData', false, resData.msg)
-  			}
+          }
           this.handleClose()
-  		})
-  		break
+        })
+        break
+      case FormMode.edit:
+        const updateFormData:IQupdateRoles = {
+          id: this.formdata.id,
+          name: this.formdata.name,
+          roles: this.changeRolesToCode(this.formdata.roles)
+        }
+        updateRoles(updateFormData).then((res:any) => {
+          const resData:ISnoData = res
+          if (resData.success) {
+            this.$emit('updateData', true, resData.msg)
+          } else {
+            this.$emit('updateData', false, resData.msg)
+          }
+          this.handleClose()
+        })
+        break
   	}
   }
 }
