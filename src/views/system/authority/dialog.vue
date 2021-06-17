@@ -45,7 +45,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch } from 'vue-property-decorator'
+import { Component, Vue } from 'vue-property-decorator'
 import { AuthTable } from '@/share/authTable'
 import { IndexTF } from './format/indexTF'
 import { DialogTF } from './format/dialogTF'
@@ -54,6 +54,7 @@ import { IQcreateRoles } from '@/api/dto/system/roles/createRoles'
 import { IQupdateRoles } from '@/api/dto/system/roles/updateRoles'
 import { createRoles, updateRoles } from '@/api/system'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Dialog'
@@ -66,7 +67,6 @@ export default class extends Vue {
   private formMode:FormMode = FormMode.create
 
   mounted() {
-    console.log(this.authorityList)
   }
 
   private handleClose() {
@@ -111,11 +111,11 @@ export default class extends Vue {
         break
       case FormMode.edit:
         const updateFormData:IQupdateRoles = {
-          id: this.formdata.id,
           name: this.formdata.name,
           roles: this.changeRolesToCode(this.formdata.roles)
         }
-        updateRoles(updateFormData).then((res:any) => {
+        const idData:IQid = {id:this.formdata.id}
+        updateRoles(updateFormData,idData).then((res:any) => {
           const resData:ISnoData = res
           if (resData.success) {
             this.$emit('updateData', true, resData.msg)

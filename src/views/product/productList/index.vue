@@ -81,6 +81,7 @@ import { ISgetProdcut } from '@/api/dto/product/list/getProduct'
 import { ProductModule } from '@/store/modules/custom/product'
 import { ResponseMsg, MsgType } from '@/share/message'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Account',
@@ -157,8 +158,10 @@ export default class extends Vue {
   	})
   }
   private handleDelete(index:number) {
-    const deleteId = this.tableData[index].id
-    deleteProducts({ id: deleteId }).then((res:any) => {
+    const deleteId:IQid = {
+      id:this.tableData[index].id
+    } 
+    deleteProducts(deleteId).then((res:any) => {
   		const resData:ISnoData = res
       if (resData.success) {
         this.updateData(true, resData.msg)

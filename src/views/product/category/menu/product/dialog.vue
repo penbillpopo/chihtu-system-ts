@@ -33,6 +33,7 @@ import { IQcreateProdCategory } from '@/api/dto/product/prodCategory/createProdC
 import { IQupdateProdCategory } from '@/api/dto/product/prodCategory/updateProdCategory'
 import { createProdCategory, updateProdCategory } from '@/api/product'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Dialog',
@@ -94,12 +95,12 @@ export default class extends Vue {
         })
         break
       case FormMode.edit:
+        const idData:IQid = {id:this.formdata.id}
         const updateFormData:IQupdateProdCategory = {
-          id: this.formdata.id,
           name: this.formdata.name,
           secondCategory: this.formdata.secondCategory
         }
-        updateProdCategory(updateFormData).then((res:any) => {
+        updateProdCategory(updateFormData,idData).then((res:any) => {
           const resData:ISnoData = res
           if (resData.success) {
             this.$emit('updateData', true, resData.msg)

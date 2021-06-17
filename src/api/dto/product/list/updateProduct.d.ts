@@ -7,7 +7,6 @@ interface IProdSpec{
 	number: string;
 }
 interface IQupdateProduct{
-    id:string
 	name:string
 	firstCategory: string
 	secondCategory: string

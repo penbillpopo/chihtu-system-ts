@@ -224,6 +224,7 @@ import { getProdCategorySelect, createProducts, updateProducts,uploadProductPict
 import { SpecListShowType, IspecTableIndexData, specTableIndexData } from './format/specTable'
 import { FormMode } from '@/share/formType'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Edit'
@@ -591,8 +592,10 @@ export default class extends Vue {
         })
         break
   	  case FormMode.edit:
+        const updateId:IQid = {
+          id:this.formdata.id
+        }
         const updateFormData:IQupdateProduct = {
-          id: this.formdata.id,
           name: this.formdata.name,
           firstCategory: this.formdata.firstCategory,
           secondCategory: this.formdata.secondCategory,
@@ -608,7 +611,7 @@ export default class extends Vue {
           status: this.formdata.status ? 1 : 0,
           spec:specArr
         }
-        updateProducts(updateFormData).then((res:any) => {
+        updateProducts(updateFormData,updateId).then((res:any) => {
           const resData:ISnoData = res
           this.BackToIndex(resData.success, resData.msg)
         })

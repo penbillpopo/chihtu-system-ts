@@ -45,6 +45,7 @@ import { createUsers, updateUser } from '@/api/system'
 import { FormMode } from '@/share/formType'
 import { Iselect, findSelectIdByName } from '@/share/select'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Dialog'
@@ -98,14 +99,16 @@ export default class extends Vue {
   		})
   		break
   	case FormMode.edit:
-        const updateFormData:IQupdateUsers = {
-          id: this.formdata.id,
-  			account: this.formdata.account,
-  			name: this.formdata.name,
-  			roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
-  			status: this.formdata.status ? '1' : '0'
-        }
-  		updateUser(updateFormData).then((res:any) => {
+      const updateFormData:IQupdateUsers = {
+        account: this.formdata.account,
+        name: this.formdata.name,
+        roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
+        status: this.formdata.status ? '1' : '0'
+      }
+      const idData:IQid = {
+        id:this.formdata.id
+      }
+  		updateUser(updateFormData,idData).then((res:any) => {
           const resData:ISnoData = res
   			if (resData.success) {
             this.$emit('updateData', true, resData.msg)

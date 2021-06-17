@@ -67,6 +67,7 @@ import { ISgetProdCategory } from '@/api/dto/product/prodCategory/getProdCategor
 import { IndexTF, ITindex } from './format/indexTF'
 import { ResponseMsg, MsgType } from '@/share/message'
 import { ISnoData } from '@/api/dto/common/resNoData'
+import { IQid } from '@/api/dto/common/idQuery'
 
 @Component({
   name: 'Product',
@@ -107,8 +108,10 @@ export default class extends Vue {
   }
 
   private handleDelete(index:number) {
-    const deleteId = this.tableData[index].id
-    deleteProdCategory({ id: deleteId }).then((res:any) => {
+    const deleteId:IQid = {
+      id:this.tableData[index].id
+    } 
+    deleteProdCategory(deleteId).then((res:any) => {
   		const resData:ISnoData = res
       if (resData.success) {
         this.updateData(true, resData.msg)

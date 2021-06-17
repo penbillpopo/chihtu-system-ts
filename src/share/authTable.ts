@@ -13,8 +13,11 @@ enum AuthChildType{
 }
 /*
 為了減少存進資料庫的字串長度，以所短編碼代替
-規則:
-第一個字母為自定義，小寫並且不可重複，一般為類別標頭第一個字。
+規則:(左到右)
+英文字母(1) + 數字(2) + 英文字母(3) + 數字(4)
+*英文字母(1)為自定義，小寫並且不可重複，一般為類別標頭第一個字。
+*英文字母(3)為J時:第"數字(2)"children的major。
+*英文字母(3)為N時:第"數字(2)"children的minor中第"數字(4)"index。
 */
 class AuthTable {
     static authTableList:Array<IauthTable> = [

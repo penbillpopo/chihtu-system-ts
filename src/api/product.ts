@@ -1,14 +1,13 @@
 import request from '@/utils/request'
 import { IQcreateProduct } from '@/api/dto/product/list/createProduct'
 import { IQupdateProduct } from '@/api/dto/product/list/updateProduct'
-import { IQdeleteProduct } from '@/api/dto/product/list/deleteProduct'
 import { IQcreateProdCategory } from '@/api/dto/product/prodCategory/createProdCategory'
 import { IQupdateProdCategory } from '@/api/dto/product/prodCategory/updateProdCategory'
-import { IQdeleteProdCategory } from '@/api/dto/product/prodCategory/deleteProdCategory'
 import { IQcreateShipCategory } from '@/api/dto/product/shipCategory/createShipCategory'
 import { IQupdateShipCategory } from '@/api/dto/product/shipCategory/updateShipCategory'
-import { IQdeleteShipCategory } from '@/api/dto/product/shipCategory/deleteShipCategory'
 import { IQgetProdcutDetail } from '@/api/dto/product/list/getProductDetail'
+import { IQid } from '@/api/dto/common/idQuery'
+
 /* product */
 export function getProducts() {
   return request({
@@ -30,18 +29,19 @@ export function createProducts(data:IQcreateProduct) {
     data
   })
 }
-export function updateProducts(data:IQupdateProduct) {
+export function updateProducts(data:IQupdateProduct,params:IQid) {
   return request({
     url: '/product',
     method: 'put',
-    data
+    data,
+    params
   })
 }
-export function deleteProducts(data:IQdeleteProduct) {
+export function deleteProducts(params:IQid) {
   return request({
     url: '/product',
     method: 'delete',
-    data
+    params
   })
 }
 
@@ -66,18 +66,19 @@ export function createProdCategory(data:IQcreateProdCategory) {
     data
   })
 }
-export function updateProdCategory(data:IQupdateProdCategory) {
+export function updateProdCategory(data:IQupdateProdCategory,params:IQid) {
   return request({
     url: '/product/prodCategory',
     method: 'put',
-    data
+    data,
+    params
   })
 }
-export function deleteProdCategory(data:IQdeleteProdCategory) {
+export function deleteProdCategory(params:IQid) {
   return request({
     url: '/product/prodCategory',
     method: 'delete',
-    data
+    params
   })
 }
 
@@ -102,17 +103,18 @@ export function createShipCategory(data:IQcreateShipCategory) {
     data
   })
 }
-export function updateShipCategory(data:IQupdateShipCategory) {
+export function updateShipCategory(data:IQupdateShipCategory,params:IQid) {
   return request({
     url: '/product/shipCategory',
     method: 'put',
-    data
+    data,
+    params
   })
 }
-export function deleteShipCategory(data:IQdeleteShipCategory) {
+export function deleteShipCategory(params:IQid) {
   return request({
     url: '/product/shipCategory',
     method: 'delete',
-    data
+    params
   })
 }

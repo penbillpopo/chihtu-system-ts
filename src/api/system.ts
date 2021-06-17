@@ -1,11 +1,10 @@
 import request from '@/utils/request'
 import { IQlogin } from '@/api/dto/system/login'
 import { IQcreateUsers } from '@/api/dto/system/users/createUsers'
-import { IQdeleteUsers } from '@/api/dto/system/users/deleteUsers'
 import { IQupdateUsers } from '@/api/dto/system/users/updateUsers'
 import { IQcreateRoles } from '@/api/dto/system/roles/createRoles'
 import { IQupdateRoles } from '@/api/dto/system/roles/updateRoles'
-import { IQdeleteRoles } from '@/api/dto/system/roles/deleteRoles'
+import { IQid } from '@/api/dto/common/idQuery'
 
 /* login */
 export function login(data:IQlogin) {
@@ -37,52 +36,54 @@ export function createUsers(data:IQcreateUsers) {
     data
   })
 }
-export function deleteUser(data:IQdeleteUsers) {
+export function deleteUser(params:IQid) {
   return request({
     url: '/user',
     method: 'delete',
-    data
+    params
   })
 }
-export function updateUser(data:IQupdateUsers) {
+export function updateUser(data:IQupdateUsers,params:IQid) {
   return request({
     url: '/user',
     method: 'put',
-    data
+    data,
+    params
   })
 }
 
-/* role */
+/* authority */
 export function getRoles() {
   return request({
-    url: '/authority/role',
+    url: '/authority',
     method: 'get'
   })
 }
 export function createRoles(data:IQcreateRoles) {
   return request({
-    url: '/authority/role',
+    url: '/authority',
     method: 'post',
     data
   })
 }
-export function deleteRoles(data:IQdeleteRoles) {
+export function deleteRoles(params:IQid) {
   return request({
-    url: '/authority/role',
+    url: '/authority',
     method: 'delete',
-    data
+    params
   })
 }
-export function updateRoles(data:IQupdateRoles) {
+export function updateRoles(data:IQupdateRoles,params:IQid) {
   return request({
-    url: '/authority/role',
+    url: '/authority',
     method: 'put',
-    data
+    data,
+    params
   })
 }
 export function getRolesSelect() {
   return request({
-    url: '/authority/role/select',
+    url: '/authority/select',
     method: 'get'
   })
 }
