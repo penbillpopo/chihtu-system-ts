@@ -23,6 +23,8 @@ interface Icontent{
 	number:string|null
 	price:number|null
 	count:number|null
+	headImage:string
+	prodImages:string
 	status:number
 	spec:Array<Ispec>
 }

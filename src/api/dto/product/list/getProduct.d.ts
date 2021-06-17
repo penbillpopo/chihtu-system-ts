@@ -2,6 +2,7 @@
 interface Icontent{
 	id:string
 	name:string
+	headImage:string
 	number:string
 	count:number
 	status:number

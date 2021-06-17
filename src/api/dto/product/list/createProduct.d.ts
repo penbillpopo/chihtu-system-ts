@@ -17,6 +17,8 @@ interface IQcreateProduct{
 	price: number
 	count: number
 	number: string
+	headImage: string
+	prodImages: string
 	status: number
 	spec:Array<IProdSpec>
 }

@@ -9,7 +9,6 @@ import { IQcreateShipCategory } from '@/api/dto/product/shipCategory/createShipC
 import { IQupdateShipCategory } from '@/api/dto/product/shipCategory/updateShipCategory'
 import { IQdeleteShipCategory } from '@/api/dto/product/shipCategory/deleteShipCategory'
 import { IQgetProdcutDetail } from '@/api/dto/product/list/getProductDetail'
-
 /* product */
 export function getProducts() {
   return request({
@@ -42,6 +41,14 @@ export function deleteProducts(data:IQdeleteProduct) {
   return request({
     url: '/product',
     method: 'delete',
+    data
+  })
+}
+
+export function uploadProductPicture(data:any) {
+  return request({
+    url: '/product/upload',
+    method: 'post',
     data
   })
 }

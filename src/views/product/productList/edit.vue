@@ -159,11 +159,13 @@
                 action="#"
                 list-type="picture-card"
                 :limit="1"
-                :class="{hide: hideCoverUploadBtn}"
+                :class="{hide: hideHeadUploadBtn}"
                 :auto-upload="false"
-                :on-change="coverUploadChange"
-                :on-preview="coverUploadCardPreview"
-                :on-remove="coverUploadRemove"
+                :multiple="false"
+                :file-list="headImageFileList"
+                :on-change="headImageUploadChange"
+                :on-preview="headImageUploadCardPreview"
+                :on-remove="headImageUploadRemove"
               >
                 <i class="el-icon-plus" />
               </el-upload>
@@ -174,11 +176,12 @@
                 action="#"
                 list-type="picture-card"
                 :limit="6"
-                :class="{hide: hideUploadBtn}"
+                :class="{hide: hideProdUploadBtn}"
                 :auto-upload="false"
-                :on-change="uploadChange"
-                :on-preview="uploadCardPreview"
-                :on-remove="uploadRemove"
+                :file-list="prodImageFileList"
+                :on-change="prodUploadChange"
+                :on-preview="prodUploadCardPreview"
+                :on-remove="prodUploadRemove"
               >
                 <i class="el-icon-plus" />
                 <p slot="tip" class="el-upload__tip" />
@@ -209,33 +212,19 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { ProductModule } from '@/store/modules/custom/product'
-import { DialogTF, ITdialog, SpecData, OptionData,ISpecData } from './format/dialogTF'
+import { DialogTF, ITdialog } from './format/dialogTF'
+import { SpecData, OptionData,ISpecData } from './format/specTable'
 import { ISprodCategorySelect } from '@/api/dto/product/prodCategory/getProdCategorySelect'
 import { IQcreateProduct,IProdSpec } from '@/api/dto/product/list/createProduct'
 import { IQupdateProduct } from '@/api/dto/product/list/updateProduct'
 import { ISgetProdcutDetail,Ispec } from '@/api/dto/product/list/getProductDetail'
+import { IQuploadProdImage} from '@/api/dto/product/list/uploadProdImage'
 import { getProductDetail } from '@/api/product'
-import { getProdCategorySelect, createProducts, updateProducts } from '@/api/product'
+import { getProdCategorySelect, createProducts, updateProducts,uploadProductPicture } from '@/api/product'
+import { SpecListShowType, IspecTableIndexData, specTableIndexData } from './format/specTable'
 import { FormMode } from '@/share/formType'
 import { ISnoData } from '@/api/dto/common/resNoData'
 
-enum SpecListShowType{
-  add,
-  delete,
-  addAndDelete,
-}
-interface IspecTableIndexData{
-  indexKey:string
-  specName:string
-}
-class specTableIndexData implements IspecTableIndexData{
-  indexKey:string = ''
-  specName:string = ''
-  constructor(indexKey:string,specName:string){
-    this.indexKey = indexKey
-    this.specName = specName
-  }
-}
 @Component({
   name: 'Edit'
 })
@@ -249,8 +238,10 @@ export default class extends Vue {
   private recursiveTempObj:any = {}
   private dialogImageUrl = ''
   private dialogVisible = false
-  private hideCoverUploadBtn = false
-  private hideUploadBtn = false
+  private hideHeadUploadBtn = false
+  private hideProdUploadBtn = false
+  private headImageFileList:Array<any> = []
+  private prodImageFileList:Array<any> = []
   private formMode:FormMode = FormMode.create
   private specTableTempObject:any = {}
   private specTableIndexMapArr:Array<IspecTableIndexData> = []
@@ -260,7 +251,6 @@ export default class extends Vue {
 
   created() {
   }
-
   get specListVisiable():boolean {
   	return this.formdata.hasSpec==='1'
   }
@@ -284,7 +274,14 @@ export default class extends Vue {
       this.specRecursive(value)
     }
   }
-
+  @Watch('headImageFileList', { immediate: true, deep: true })
+  onHeadImageFileListChanged(value: any) {
+    if (value.length >= 1) {
+  		this.hideHeadUploadBtn = true
+  	} else {
+  		this.hideHeadUploadBtn = false
+  	}
+  }
   initData() {
     getProdCategorySelect().then((res:any) => {
       const resData:ISprodCategorySelect = res
@@ -312,11 +309,22 @@ export default class extends Vue {
         getProductDetail({id:productId.toString()}).then((res:any) => {
           const resData:ISgetProdcutDetail = res
           const { name,firstCategory,secondCategory,detail,firstSpec,secondSpec,hasSpec,
-            price,count,number,status,id,spec } = resData.data.content
+            price,count,number,headImage,prodImages,status,id,spec } = resData.data.content
           this.formdata = new DialogTF(name,firstCategory,secondCategory,detail,hasSpec.toString(),
             (firstSpec||'').toString(),(secondSpec||'').toString(),(price||'').toString(),
             (count||'').toString(),(number||'').toString(),status===1,id,spec)
           this.saveSpecTempObject(spec)
+          this.headImageFileList = [{
+            name:headImage,
+            url:this.getProdImage(headImage)
+          }]
+          let prodImgList = prodImages.split(',')
+          prodImgList.forEach(element => {
+            this.prodImageFileList.push({
+              name:element,
+              url:this.getProdImage(element)
+            })
+          });
         })
         break
       case FormMode.create:
@@ -462,46 +470,33 @@ export default class extends Vue {
       return ''
   }
 
-  private coverUploadRemove(file:any, fileList:any) {
-  	this.coverUploadBtnVisable(fileList)
+  getProdImage(imgName:string){
+    return process.env.VUE_APP_BASE_API+'product/image?name='+imgName
   }
-
-  private coverUploadChange(file:any, fileList:any) {
-  	this.coverUploadBtnVisable(fileList)
+  /*封面圖片 */
+  private headImageUploadRemove(file:any, fileList:any) {
+  	this.headImageFileList = [...fileList]
   }
-
-  private coverUploadCardPreview(file:any) {
+  private headImageUploadChange(file:any, fileList:any) {
+  	this.headImageFileList = [...fileList]
+  }
+  private headImageUploadCardPreview(file:any) {
   	this.dialogImageUrl = file.url
   	this.dialogVisible = true
   }
 
-  private coverUploadBtnVisable(fileList:any) {
-  	if (fileList.length >= 1) {
-  		this.hideCoverUploadBtn = true
-  	} else {
-  		this.hideCoverUploadBtn = false
-  	}
+  /*產品圖片 */
+  private prodUploadRemove(file:any, fileList:any) {
+  	this.prodImageFileList = [...fileList]
   }
 
-  private uploadRemove(file:any, fileList:any) {
-  	this.uploadBtnVisable(fileList)
+  private prodUploadChange(file:any, fileList:any) {
+    this.prodImageFileList = [...fileList]
   }
 
-  private uploadChange(file:any, fileList:any) {
-  	this.uploadBtnVisable(fileList)
-  }
-
-  private uploadCardPreview(file:any) {
+  private prodUploadCardPreview(file:any) {
   	this.dialogImageUrl = file.url
   	this.dialogVisible = true
-  }
-
-  private uploadBtnVisable(fileList:any) {
-  	if (fileList.length >= 6) {
-  		this.hideUploadBtn = true
-  	} else {
-  		this.hideUploadBtn = false
-  	}
   }
 
   private BackToIndex(isSuccess:boolean, msg:string) {
@@ -513,8 +508,44 @@ export default class extends Vue {
   		path: '/product/productList'
   	})
   }
-
-  private submitForm() {
+  uploadImage(file:any){
+    return new Promise<string>(resolve=>{
+      let formData = new FormData()
+      formData.append('file',file)
+      uploadProductPicture(formData).then((res:any) => {
+        const resData:IQuploadProdImage = res
+        resolve(resData.data.fileName)
+      })
+    })
+  }
+  private uploadImageFromData(){
+    return new Promise<void>(async (resolve)=>{
+      /*封面圖*/
+      if(this.headImageFileList.length > 0){
+        let headImageData = this.headImageFileList[0]
+        //if:新圖 else:舊圖
+        if(headImageData.hasOwnProperty('raw')){
+          headImageData.name = await this.uploadImage(headImageData.raw)
+        }
+      }
+      /*產品圖*/
+      //用foreach會有問題
+      if(this.prodImageFileList.length > 0){
+        for (let i = 0; i < this.prodImageFileList.length; i++) {
+          const element = this.prodImageFileList[i];
+          //if:新圖 else:舊圖
+          if(element.hasOwnProperty('raw')){
+            element.name = await this.uploadImage(element.raw)
+          }
+        }
+      }
+      resolve()
+    })
+  }
+  private getImgFileListName(fileList:Array<any>){
+    return fileList.map(item=>item.name).toString()
+  }
+  private async submitForm() {
     let specArr:Array<IProdSpec> = []
     this.specTable.forEach(element => {
       let data:IProdSpec = {
@@ -535,6 +566,7 @@ export default class extends Vue {
       data.number = element.number
       specArr.push(data)
     });
+    await this.uploadImageFromData()
     switch (this.formMode) {
   	  case FormMode.create:
         const createFormData:IQcreateProduct = {
@@ -548,6 +580,8 @@ export default class extends Vue {
           price: parseInt(this.formdata.price),
           count: parseInt(this.formdata.count),
           number: this.formdata.number,
+          headImage:this.getImgFileListName(this.headImageFileList),
+          prodImages:this.getImgFileListName(this.prodImageFileList),
           status: this.formdata.status ? 1 : 0,
           spec:specArr
         }
@@ -569,6 +603,8 @@ export default class extends Vue {
           price: parseInt(this.formdata.price),
           count: parseInt(this.formdata.count),
           number: this.formdata.number,
+          headImage:this.getImgFileListName(this.headImageFileList),
+          prodImages:this.getImgFileListName(this.prodImageFileList),
           status: this.formdata.status ? 1 : 0,
           spec:specArr
         }

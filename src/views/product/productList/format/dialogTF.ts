@@ -1,4 +1,6 @@
 import { Ispec } from '@/api/dto/product/list/getProductDetail'
+import { SpecData } from './specTable'
+
 
 interface ITdialog{
 	name:string
@@ -15,10 +17,7 @@ interface ITdialog{
 	id:string
 	specList:Array<any>
 }
-interface ISpecData{
-	specName:string
-	optionList:Array<any>
-}
+
 
 class DialogTF implements ITdialog {
 	name = ''
@@ -77,24 +76,6 @@ class DialogTF implements ITdialog {
 		}
 	}
 }
-class SpecData {
-	constructor(specName = '',optionList:Array<string> = []) {
-		this.specName = specName
-		if(optionList.length>0){
-			optionList.forEach(element => {
-				this.optionList.push(new OptionData(element))
-			});
-		}else{
-			this.optionList.push(new OptionData())
-		}
-	}
-	specName = ''
-	optionList:any = []
-}
-class OptionData {
-	constructor(optionName = '') {
-		this.optionName = optionName
-	}
-	optionName = ''
-}
-export { DialogTF, ITdialog, SpecData, OptionData,ISpecData }
+
+
+export { DialogTF, ITdialog }

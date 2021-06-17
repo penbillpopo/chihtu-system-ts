@@ -20,6 +20,15 @@
             min-width="120"
           />
           <el-table-column
+            prop="headImage"
+            label="封面圖片"
+            min-width="100"
+          >
+            <template slot-scope="{row}">
+              <img class="prodImg" :src="getProdImage(row.headImage)" alt="">
+            </template>
+          </el-table-column>
+          <el-table-column
             prop="status"
             label="狀態"
             min-width="120"
@@ -108,8 +117,8 @@ export default class extends Vue {
   	getProducts().then((res:any) => {
   		const resData:ISgetProdcut = res
   		resData.data.content.forEach(element => {
-        const { id, name, status, updatedAt } = element
-  			this.tableData.push(new IndexTF(id, name, status === 1, updatedAt))
+        const { id, name,headImage, status, updatedAt } = element
+  			this.tableData.push(new IndexTF(id, name,headImage, status === 1, updatedAt))
   		})
   	})
   }
@@ -119,6 +128,10 @@ export default class extends Vue {
       ResponseMsg(ProductModule.isSuccess ? MsgType.success : MsgType.failure, ProductModule.msg)
       ProductModule.resetIndexProduct()
     }
+  }
+
+  getProdImage(imgName:string){
+    return process.env.VUE_APP_BASE_API+'product/image?name='+imgName
   }
 
   private handleSizeChange(val:any) {
@@ -160,3 +173,9 @@ export default class extends Vue {
   }
 }
 </script>
+<style scoped lang="scss">
+  .prodImg{
+    width: 100px;
+    height: 100px;
+  }
+</style>
