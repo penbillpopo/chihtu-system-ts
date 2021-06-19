@@ -2,7 +2,9 @@
 <template>
   <div class="optionBoxGroup">
     <div v-for="(item,index) in optionList" :key="index" class="optionBox">
-      <el-form-item :label="index===0?'選項':''">
+      <el-form-item :label="index===0?'選項':''"
+        :rules="rules"
+        :prop="optionListName + '.' + index + '.optionName'">
         <div class="optionItem">
           <el-input v-model="item.optionName" placeholder="請輸入選項名稱" />
           <button
@@ -33,7 +35,9 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
   name: 'OptionBox'
 })
 export default class extends Vue {
-  @Prop({ type: Array, default: () => [] }) private optionList:any
+  @Prop({ type: Array, default: () => [] }) private optionList:Array<any>
+  @Prop({ type: String, default: '' }) private optionListName:string
+  @Prop({ type: Object, default: () => {} }) private rules:any
 
   private addOptionbox() {
   	this.$emit('addOptionbox')

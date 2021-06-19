@@ -2,6 +2,7 @@ interface ITdialog{
   name:string
   secondCategory:string
   id:string
+  optionList:any
 }
 class DialogTF implements ITdialog {
   name = ''
@@ -28,4 +29,4 @@ class OptionData {
     this.optionName = optionName
   }
 }
-export { DialogTF, OptionData }
+export {ITdialog, DialogTF, OptionData }

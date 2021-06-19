@@ -69,13 +69,14 @@ export default class extends Vue {
     name: [
       { required: true, message: '請輸入權限名稱', trigger: 'blur' },
       { validator: alphanumeriChineseRule(this.formdata.name,'name',this.$refs.dataForm)
-        , trigger: 'change' }
+        , trigger: ['change','blur'] }
     ],
     roles: [
       { type: 'array', required: true, message: '請至少選擇一個權限', trigger: 'blur' }
     ],
   }
   mounted() {
+    
   }
 
   private handleClose() {

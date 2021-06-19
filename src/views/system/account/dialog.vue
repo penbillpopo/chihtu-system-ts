@@ -53,7 +53,6 @@ import { alphanumericRule,alphanumeriChineseRule } from '@/share/rule'
 })
 export default class extends Vue {
   @Prop({ default: () => [] }) private rolesOption!: Iselect[]
-
   private formdata:ITdialog = new DialogTF()
   private dialogVisible = false
   private formMode:FormMode = FormMode.create
