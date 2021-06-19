@@ -77,7 +77,6 @@ export default class extends Vue {
     ]
   }
 
-
   get isCreateMode() {
     return this.formMode === FormMode.create
   }

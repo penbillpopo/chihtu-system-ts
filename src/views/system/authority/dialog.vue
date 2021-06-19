@@ -1,14 +1,14 @@
 <template>
   <div class="dialog-container">
-    <el-dialog :visible.sync="dialogVisible" title="新增權限">
-      <el-form ref="dataForm" :model="formdata" class="formBox">
+    <el-dialog :visible.sync="dialogVisible" :before-close="handleClose" title="新增權限">
+      <el-form ref="dataForm" :rules="rules" :model="formdata" class="formBox">
         <div class="formRow">
           <el-form-item label="權限名稱" prop="name">
             <el-input v-model="formdata.name" placeholder="請輸入權限名稱" />
           </el-form-item>
         </div>
         <div class="formRow all">
-          <el-form-item>
+          <el-form-item prop="roles">
             <el-tabs v-model="activeName">
               <el-tab-pane v-for="item in authorityList" :key="item.name"
                 :label="$t('authority.'+item.name)" :name="item.name">
@@ -30,7 +30,6 @@
                       {{$t('authority.' + minoritem)}}
                     </el-checkbox>
                   </div>
-
                 </el-checkbox-group>
               </el-tab-pane>
             </el-tabs>
@@ -38,7 +37,7 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button @click="handleClose">取消</el-button>
         <el-button @click="submitForm" type="primary">確認</el-button>
       </div>
     </el-dialog>
@@ -55,6 +54,7 @@ import { IQupdateRoles } from '@/api/dto/system/roles/updateRoles'
 import { createRoles, updateRoles } from '@/api/system'
 import { ISnoData } from '@/api/dto/common/resNoData'
 import { IQid } from '@/api/dto/common/idQuery'
+import { alphanumeriChineseRule } from '@/share/rule'
 
 @Component({
   name: 'Dialog'
@@ -65,11 +65,22 @@ export default class extends Vue {
   private authorityList = AuthTable.authTableList
   private formdata = new DialogTF()
   private formMode:FormMode = FormMode.create
-
+  private rules = {
+    name: [
+      { required: true, message: '請輸入權限名稱', trigger: 'blur' },
+      { validator: alphanumeriChineseRule(this.formdata.name,'name',this.$refs.dataForm)
+        , trigger: 'change' }
+    ],
+    roles: [
+      { type: 'array', required: true, message: '請至少選擇一個權限', trigger: 'blur' }
+    ],
+  }
   mounted() {
   }
 
   private handleClose() {
+  	const ref:any = this.$refs.dataForm
+    ref.clearValidate()
   	this.dialogVisible = false
   }
 
@@ -93,36 +104,45 @@ export default class extends Vue {
   }
 
   private submitForm() {
+    const ref:any = this.$refs.dataForm
     switch (this.formMode) {
       case FormMode.create:
-        const createFormData:IQcreateRoles = {
-          name: this.formdata.name,
-          roles: this.changeRolesToCode(this.formdata.roles)
-        }
-        createRoles(createFormData).then((res:any) => {
-          const resData:ISnoData = res
-          if (resData.success) {
-            this.$emit('updateData', true, resData.msg)
-          } else {
-            this.$emit('updateData', false, resData.msg)
+        ref.validate(valid => {
+          if (valid) {
+            const createFormData:IQcreateRoles = {
+              name: this.formdata.name,
+              roles: this.changeRolesToCode(this.formdata.roles)
+            }
+            createRoles(createFormData).then((res:any) => {
+              const resData:ISnoData = res
+              if (resData.success) {
+                this.$emit('updateData', true, resData.msg)
+              } else {
+                this.$emit('updateData', false, resData.msg)
+              }
+              this.handleClose()
+            })
           }
-          this.handleClose()
         })
         break
       case FormMode.edit:
-        const updateFormData:IQupdateRoles = {
-          name: this.formdata.name,
-          roles: this.changeRolesToCode(this.formdata.roles)
-        }
-        const idData:IQid = { id: this.formdata.id }
-        updateRoles(updateFormData, idData).then((res:any) => {
-          const resData:ISnoData = res
-          if (resData.success) {
-            this.$emit('updateData', true, resData.msg)
-          } else {
-            this.$emit('updateData', false, resData.msg)
+        ref.validate(valid => {
+          if (valid) {
+            const updateFormData:IQupdateRoles = {
+              name: this.formdata.name,
+              roles: this.changeRolesToCode(this.formdata.roles)
+            }
+            const idData:IQid = { id: this.formdata.id }
+            updateRoles(updateFormData, idData).then((res:any) => {
+              const resData:ISnoData = res
+              if (resData.success) {
+                this.$emit('updateData', true, resData.msg)
+              } else {
+                this.$emit('updateData', false, resData.msg)
+              }
+              this.handleClose()
+            })
           }
-          this.handleClose()
         })
         break
   	}
