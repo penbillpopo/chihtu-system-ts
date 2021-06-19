@@ -38,4 +38,4 @@ interface ISgetProdcutDetail{
 	msg:string
 }
 
-export { ISgetProdcutDetail,IQgetProdcutDetail,Ispec }
+export { ISgetProdcutDetail, IQgetProdcutDetail, Ispec }

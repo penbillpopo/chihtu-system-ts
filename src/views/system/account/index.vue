@@ -158,7 +158,7 @@ export default class extends Vue {
 
   private handleDelete(index:number) {
     const deleteId:IQid = {
-      id:this.tableData[index].id
+      id: this.tableData[index].id
     }
     deleteUser(deleteId).then((res:any) => {
   		const resData:ISnoData = res

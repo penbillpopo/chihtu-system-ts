@@ -1,10 +1,10 @@
 /* request */
 interface IProdSpec{
-	firstSpec: string;
-	secondSpec: string;
-	price: number;
-	count: number;
-	number: string;
+	firstSpec: string
+	secondSpec: string
+	price: number
+	count: number
+	number: string
 }
 interface IQcreateProduct{
 	name:string
@@ -23,4 +23,4 @@ interface IQcreateProduct{
 	spec:Array<IProdSpec>
 }
 
-export { IQcreateProduct,IProdSpec }
+export { IQcreateProduct, IProdSpec }

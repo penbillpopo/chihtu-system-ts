@@ -98,7 +98,8 @@ class AuthTable {
     	const compareHead = key[0]
     	const compareBody = key.substr(1, key.length - 1)
     	let compareType:AuthChildType = AuthChildType.major
-      let codeArr = []; let code = ''; const authIndex = 0; const minorIndex = 0
+      let codeArr:Array<any> = []
+      let code = ''
       if (compareBody.includes('J')) {
         compareType = AuthChildType.major
         code = 'J'

@@ -43,7 +43,7 @@ export function deleteUser(params:IQid) {
     params
   })
 }
-export function updateUser(data:IQupdateUsers,params:IQid) {
+export function updateUser(data:IQupdateUsers, params:IQid) {
   return request({
     url: '/user',
     method: 'put',
@@ -73,7 +73,7 @@ export function deleteRoles(params:IQid) {
     params
   })
 }
-export function updateRoles(data:IQupdateRoles,params:IQid) {
+export function updateRoles(data:IQupdateRoles, params:IQid) {
   return request({
     url: '/authority',
     method: 'put',

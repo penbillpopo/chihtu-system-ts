@@ -1,10 +1,10 @@
 /* request */
 interface IProdSpec{
-	firstSpec: string;
-	secondSpec: string;
-	price: number;
-	count: number;
-	number: string;
+	firstSpec: string
+	secondSpec: string
+	price: number
+	count: number
+	number: string
 }
 interface IQupdateProduct{
 	name:string

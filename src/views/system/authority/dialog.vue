@@ -114,8 +114,8 @@ export default class extends Vue {
           name: this.formdata.name,
           roles: this.changeRolesToCode(this.formdata.roles)
         }
-        const idData:IQid = {id:this.formdata.id}
-        updateRoles(updateFormData,idData).then((res:any) => {
+        const idData:IQid = { id: this.formdata.id }
+        updateRoles(updateFormData, idData).then((res:any) => {
           const resData:ISnoData = res
           if (resData.success) {
             this.$emit('updateData', true, resData.msg)

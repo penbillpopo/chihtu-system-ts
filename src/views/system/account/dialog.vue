@@ -1,7 +1,7 @@
 <template>
   <div class="dialog-container">
-    <el-dialog :visible.sync="dialogVisible" title="新增帳號">
-      <el-form ref="dataForm" :model="formdata" class="formBox">
+    <el-dialog :visible.sync="dialogVisible" :before-close="handleClose" title="新增帳號">
+      <el-form ref="dataForm" :rules="rules" :model="formdata" class="formBox">
         <div class="formRow">
           <el-form-item label="帳號 (電子信箱)" prop="account">
             <el-input v-model="formdata.account" placeholder="請輸入帳號" />
@@ -46,6 +46,7 @@ import { FormMode } from '@/share/formType'
 import { Iselect, findSelectIdByName } from '@/share/select'
 import { ISnoData } from '@/api/dto/common/resNoData'
 import { IQid } from '@/api/dto/common/idQuery'
+import { alphanumericRule,alphanumeriChineseRule } from '@/share/rule'
 
 @Component({
   name: 'Dialog'
@@ -56,11 +57,34 @@ export default class extends Vue {
   private formdata:ITdialog = new DialogTF()
   private dialogVisible = false
   private formMode:FormMode = FormMode.create
+  private rules = {
+    account: [
+      { required: true, message: '請輸入帳號', trigger: 'blur' },
+      { type: 'email', message: '信箱格式錯誤', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: '請輸入密碼', trigger: 'blur' },
+      { validator: alphanumericRule(this.formdata.password,'password',this.$refs.dataForm)
+        , trigger: 'change' }
+    ],
+    name: [
+      { required: true, message: '請輸入名稱', trigger: 'blur' },
+      { validator: alphanumeriChineseRule(this.formdata.name,'name',this.$refs.dataForm)
+        , trigger: 'change' }
+    ],
+    roleName: [
+      { required: true, message: '請選擇權限', trigger: 'blur' }
+    ]
+  }
+
+
   get isCreateMode() {
     return this.formMode === FormMode.create
   }
 
   private handleClose() {
+    const ref:any = this.$refs.dataForm
+    ref.clearValidate()
   	this.dialogVisible = false
   }
 
@@ -79,45 +103,58 @@ export default class extends Vue {
   }
 
   private submitForm() {
+    const ref:any = this.$refs.dataForm
   	switch (this.formMode) {
   	case FormMode.create:
-  		const createFormData:IQcreateUsers = {
-          account: this.formdata.account,
-  		  password: this.formdata.password,
-  			name: this.formdata.name,
-  			roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
-  			status: this.formdata.status ? '1' : '0'
-        }
-  		createUsers(createFormData).then((res:any) => {
-          const resData:ISnoData = res
-  			if (resData.success) {
-            this.$emit('updateData', true, resData.msg)
-  			} else {
-            this.$emit('updateData', false, resData.msg)
-  			}
-          this.handleClose()
-  		})
-  		break
+        ref.validate(valid => {
+          if (valid) {
+            const createFormData:IQcreateUsers = {
+              account: this.formdata.account,
+              password: this.formdata.password,
+              name: this.formdata.name,
+              roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
+              status: this.formdata.status ? '1' : '0'
+            }
+            createUsers(createFormData).then((res:any) => {
+              const resData:ISnoData = res
+              if (resData.success) {
+                this.$emit('updateData', true, resData.msg)
+              } else {
+                this.$emit('updateData', false, resData.msg)
+              }
+              this.handleClose()
+            })
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+  		break;
   	case FormMode.edit:
-      const updateFormData:IQupdateUsers = {
-        account: this.formdata.account,
-        name: this.formdata.name,
-        roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
-        status: this.formdata.status ? '1' : '0'
-      }
-      const idData:IQid = {
-        id:this.formdata.id
-      }
-  		updateUser(updateFormData,idData).then((res:any) => {
-          const resData:ISnoData = res
-  			if (resData.success) {
-            this.$emit('updateData', true, resData.msg)
-  			} else {
-            this.$emit('updateData', false, resData.msg)
-  			}
-          this.handleClose()
-  		})
-  		break
+      ref.validate(valid => {
+          if (valid) {
+            const updateFormData:IQupdateUsers = {
+              account: this.formdata.account,
+              name: this.formdata.name,
+              roleId: findSelectIdByName(this.rolesOption, this.formdata.roleName),
+              status: this.formdata.status ? '1' : '0'
+            }
+            const idData:IQid = {
+              id: this.formdata.id
+            }
+            updateUser(updateFormData, idData).then((res:any) => {
+                const resData:ISnoData = res
+              if (resData.success) {
+                  this.$emit('updateData', true, resData.msg)
+              } else {
+                  this.$emit('updateData', false, resData.msg)
+              }
+                this.handleClose()
+            })
+          }
+        }
+      )
+  		break;
   	}
   }
 }

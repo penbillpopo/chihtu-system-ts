@@ -29,7 +29,7 @@ export function createProducts(data:IQcreateProduct) {
     data
   })
 }
-export function updateProducts(data:IQupdateProduct,params:IQid) {
+export function updateProducts(data:IQupdateProduct, params:IQid) {
   return request({
     url: '/product',
     method: 'put',
@@ -66,7 +66,7 @@ export function createProdCategory(data:IQcreateProdCategory) {
     data
   })
 }
-export function updateProdCategory(data:IQupdateProdCategory,params:IQid) {
+export function updateProdCategory(data:IQupdateProdCategory, params:IQid) {
   return request({
     url: '/product/prodCategory',
     method: 'put',
@@ -103,7 +103,7 @@ export function createShipCategory(data:IQcreateShipCategory) {
     data
   })
 }
-export function updateShipCategory(data:IQupdateShipCategory,params:IQid) {
+export function updateShipCategory(data:IQupdateShipCategory, params:IQid) {
   return request({
     url: '/product/shipCategory',
     method: 'put',

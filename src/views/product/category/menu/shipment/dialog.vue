@@ -68,11 +68,11 @@ export default class extends Vue {
         })
         break
       case FormMode.edit:
-        const idData:IQid = {id:this.formdata.id}
+        const idData:IQid = { id: this.formdata.id }
         const updateFormData:IQupdateShipCategory = {
           name: this.formdata.name
         }
-        updateShipCategory(updateFormData,idData).then((res:any) => {
+        updateShipCategory(updateFormData, idData).then((res:any) => {
           const resData:ISnoData = res
           if (resData.success) {
             this.$emit('updateData', true, resData.msg)

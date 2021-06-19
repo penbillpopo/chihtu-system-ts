@@ -11,7 +11,7 @@ class IndexTF implements ITindex {
     headImage = ''
     status = true
     updatedAt = ''
-    constructor(id = '', name = '',headImage = '',status = true,
+    constructor(id = '', name = '', headImage = '', status = true,
     	updatedAt = '') {
     	this.id = id
     	this.name = name

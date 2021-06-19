@@ -75,7 +75,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import searchPanel from './searchPanel.vue'
-import { getProducts,deleteProducts } from '@/api/product'
+import { getProducts, deleteProducts } from '@/api/product'
 import { IndexTF, ITindex } from './format/indexTF'
 import { ISgetProdcut } from '@/api/dto/product/list/getProduct'
 import { ProductModule } from '@/store/modules/custom/product'
@@ -118,8 +118,8 @@ export default class extends Vue {
   	getProducts().then((res:any) => {
   		const resData:ISgetProdcut = res
   		resData.data.content.forEach(element => {
-        const { id, name,headImage, status, updatedAt } = element
-  			this.tableData.push(new IndexTF(id, name,headImage, status === 1, updatedAt))
+        const { id, name, headImage, status, updatedAt } = element
+  			this.tableData.push(new IndexTF(id, name, headImage, status === 1, updatedAt))
   		})
   	})
   }
@@ -131,8 +131,8 @@ export default class extends Vue {
     }
   }
 
-  getProdImage(imgName:string){
-    return process.env.VUE_APP_BASE_API+'product/image?name='+imgName
+  getProdImage(imgName:string) {
+    return process.env.VUE_APP_BASE_API + 'product/image?name=' + imgName
   }
 
   private handleSizeChange(val:any) {
@@ -152,15 +152,16 @@ export default class extends Vue {
   private openDialogEdit(index:number) {
   	this.$router.push({
   		path: '/product/productList/edit',
-      query:{
-        id:this.tableData[index].id
+      query: {
+        id: this.tableData[index].id
       }
   	})
   }
+
   private handleDelete(index:number) {
     const deleteId:IQid = {
-      id:this.tableData[index].id
-    } 
+      id: this.tableData[index].id
+    }
     deleteProducts(deleteId).then((res:any) => {
   		const resData:ISnoData = res
       if (resData.success) {
@@ -170,6 +171,7 @@ export default class extends Vue {
       }
   	})
   }
+
   private updateData(isSuccess:boolean, msg:string) {
     ResponseMsg(isSuccess ? MsgType.success : MsgType.failure, msg)
     this.initData()

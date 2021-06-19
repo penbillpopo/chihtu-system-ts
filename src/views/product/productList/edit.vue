@@ -213,15 +213,14 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import { ProductModule } from '@/store/modules/custom/product'
 import { DialogTF, ITdialog } from './format/dialogTF'
-import { SpecData, OptionData,ISpecData } from './format/specTable'
+import { SpecData, OptionData, ISpecData, SpecListShowType, IspecTableIndexData, specTableIndexData } from './format/specTable'
 import { ISprodCategorySelect } from '@/api/dto/product/prodCategory/getProdCategorySelect'
-import { IQcreateProduct,IProdSpec } from '@/api/dto/product/list/createProduct'
+import { IQcreateProduct, IProdSpec } from '@/api/dto/product/list/createProduct'
 import { IQupdateProduct } from '@/api/dto/product/list/updateProduct'
-import { ISgetProdcutDetail,Ispec } from '@/api/dto/product/list/getProductDetail'
-import { IQuploadProdImage} from '@/api/dto/product/list/uploadProdImage'
-import { getProductDetail } from '@/api/product'
-import { getProdCategorySelect, createProducts, updateProducts,uploadProductPicture } from '@/api/product'
-import { SpecListShowType, IspecTableIndexData, specTableIndexData } from './format/specTable'
+import { ISgetProdcutDetail, Ispec } from '@/api/dto/product/list/getProductDetail'
+import { IQuploadProdImage } from '@/api/dto/product/list/uploadProdImage'
+import { getProductDetail, getProdCategorySelect, createProducts, updateProducts, uploadProductPicture } from '@/api/product'
+
 import { FormMode } from '@/share/formType'
 import { ISnoData } from '@/api/dto/common/resNoData'
 import { IQid } from '@/api/dto/common/idQuery'
@@ -252,8 +251,9 @@ export default class extends Vue {
 
   created() {
   }
+
   get specListVisiable():boolean {
-  	return this.formdata.hasSpec==='1'
+  	return this.formdata.hasSpec === '1'
   }
 
   @Watch('formdata.firstCategory', { immediate: true, deep: true })
@@ -266,15 +266,16 @@ export default class extends Vue {
   @Watch('formdata.specList', { immediate: true, deep: true })
   onSpecListChanged(value:Array<ISpecData>) {
     if (value) {
-      if(value[0]){
+      if (value[0]) {
         this.formdata.firstSpec = value[0].specName
       }
-      if(value[1]){
+      if (value[1]) {
         this.formdata.secondSpec = value[1].specName
       }
       this.specRecursive(value)
     }
   }
+
   @Watch('headImageFileList', { immediate: true, deep: true })
   onHeadImageFileListChanged(value: any) {
     if (value.length >= 1) {
@@ -283,6 +284,7 @@ export default class extends Vue {
   		this.hideHeadUploadBtn = false
   	}
   }
+
   initData() {
     getProdCategorySelect().then((res:any) => {
       const resData:ISprodCategorySelect = res
@@ -298,8 +300,9 @@ export default class extends Vue {
       this.categoryOptionMap[element.firstCategory] = element.secondCategory
     })
   }
+
   initProductModule() {
-    let productId = this.$route.query.id
+    const productId = this.$route.query.id
     if (productId) {
       this.formMode = FormMode.edit
     } else {
@@ -307,25 +310,27 @@ export default class extends Vue {
     }
     switch (this.formMode) {
       case FormMode.edit:
-        getProductDetail({id:productId.toString()}).then((res:any) => {
+        getProductDetail({ id: productId.toString() }).then((res:any) => {
           const resData:ISgetProdcutDetail = res
-          const { name,firstCategory,secondCategory,detail,firstSpec,secondSpec,hasSpec,
-            price,count,number,headImage,prodImages,status,id,spec } = resData.data.content
-          this.formdata = new DialogTF(name,firstCategory,secondCategory,detail,hasSpec.toString(),
-            (firstSpec||'').toString(),(secondSpec||'').toString(),(price||'').toString(),
-            (count||'').toString(),(number||'').toString(),status===1,id,spec)
+          const {
+            name, firstCategory, secondCategory, detail, firstSpec, secondSpec, hasSpec,
+            price, count, number, headImage, prodImages, status, id, spec
+          } = resData.data.content
+          this.formdata = new DialogTF(name, firstCategory, secondCategory, detail, hasSpec.toString(),
+            (firstSpec || '').toString(), (secondSpec || '').toString(), (price || '').toString(),
+            (count || '').toString(), (number || '').toString(), status === 1, id, spec)
           this.saveSpecTempObject(spec)
           this.headImageFileList = [{
-            name:headImage,
-            url:this.getProdImage(headImage)
+            name: headImage,
+            url: this.getProdImage(headImage)
           }]
-          let prodImgList = prodImages.split(',')
+          const prodImgList = prodImages.split(',')
           prodImgList.forEach(element => {
             this.prodImageFileList.push({
-              name:element,
-              url:this.getProdImage(element)
+              name: element,
+              url: this.getProdImage(element)
             })
-          });
+          })
         })
         break
       case FormMode.create:
@@ -334,13 +339,14 @@ export default class extends Vue {
     }
   }
 
-  //將specList data轉換成specTable
-  specRecursive(specList:Array<ISpecData>){
+  // 將specList data轉換成specTable
+  specRecursive(specList:Array<ISpecData>) {
     this.specTable = []
     this.recursiveTempObj = {}
     this.specListRecursive(specList, 0)
     this.saveTempDataToTable()
   }
+
   private specListRecursive(specList:Array<ISpecData>, index:number) {
     if (index === specList.length) {
       this.specTable.push(Object.assign({}, this.recursiveTempObj))
@@ -351,13 +357,14 @@ export default class extends Vue {
       this.specListRecursive(specList, index + 1)
     }
   }
-  saveTempDataToTable(){
+
+  saveTempDataToTable() {
     this.updateSpecTableIndexMapArr()
     for (let i = 0; i < this.specTable.length; i++) {
-      const specTableItem = this.specTable[i];
-      if(this.specTableIndexMapArr[i]){
-        let tempData = this.specTableTempObject[this.specTableIndexMapArr[i].indexKey]
-        if(tempData){
+      const specTableItem = this.specTable[i]
+      if (this.specTableIndexMapArr[i]) {
+        const tempData = this.specTableTempObject[this.specTableIndexMapArr[i].indexKey]
+        if (tempData) {
           this.$set(specTableItem, 'price', tempData.price)
           this.$set(specTableItem, 'count', tempData.count)
           this.$set(specTableItem, 'number', tempData.number)
@@ -365,61 +372,65 @@ export default class extends Vue {
       }
     }
   }
-  updateSpecTableIndexMapArr(){
+
+  updateSpecTableIndexMapArr() {
     this.specTableIndexMapArr = []
-    if(this.formdata.specList[0]){
+    if (this.formdata.specList[0]) {
       for (let i = 0; i < this.formdata.specList[0].optionList.length; i++) {
-        if(this.formdata.specList[1]){
+        if (this.formdata.specList[1]) {
           for (let j = 0; j < this.formdata.specList[1].optionList.length; j++) {
             this.specTableIndexMapArr.push(new specTableIndexData(`${i},${j}`,
               this.formdata.specList[0].optionList[i].optionName +
               ',' + this.formdata.specList[1].optionList[j].optionName))
           }
-        }
-        else{
+        } else {
           this.specTableIndexMapArr.push(new specTableIndexData(`${i}`,
             this.formdata.specList[0].optionList[i].optionName))
         }
       }
     }
   }
-  initSpecTempObject(specTable:Array<Ispec>){
-    let curSpecTable = []
+
+  initSpecTempObject(specTable:Array<Ispec>) {
+    const curSpecTable = []
     for (let i = 0; i < this.specTableIndexMapArr.length; i++) {
-      const specMapItemNameArr = this.specTableIndexMapArr[i].specName.split(',');
-      let firstSpecName = specMapItemNameArr[0]
-      let secondSpecName = specMapItemNameArr[1]
+      const specMapItemNameArr = this.specTableIndexMapArr[i].specName.split(',')
+      const firstSpecName = specMapItemNameArr[0]
+      const secondSpecName = specMapItemNameArr[1]
       for (let j = 0; j < specTable.length; j++) {
-        const specTableItem = specTable[j];
-        if(specTableItem.firstSpec===firstSpecName&&
-          specTableItem.secondSpec===secondSpecName){
-            curSpecTable.push(specTableItem)
+        const specTableItem = specTable[j]
+        if (specTableItem.firstSpec === firstSpecName &&
+          specTableItem.secondSpec === secondSpecName) {
+          curSpecTable.push(specTableItem)
         }
       }
     }
     return curSpecTable
   }
-  saveSpecTempObject(specTable?:Array<Ispec>){
+
+  saveSpecTempObject(specTable?:Array<Ispec>) {
     this.specTableTempObject = {}
     this.updateSpecTableIndexMapArr()
     let curSpecTable = [...this.specTable]
-    if(specTable){
+    if (specTable) {
       curSpecTable = this.initSpecTempObject(specTable)
     }
     for (let i = 0; i < curSpecTable.length; i++) {
-      const specItem = curSpecTable[i];
-      if(this.specTableIndexMapArr[i]){
+      const specItem = curSpecTable[i]
+      if (this.specTableIndexMapArr[i]) {
         this.specTableTempObject[this.specTableIndexMapArr[i].indexKey] = {
-          price:specItem.price,
-          count:specItem.count,
-          number:specItem.number,
+          price: specItem.price,
+          count: specItem.count,
+          number: specItem.number
         }
       }
     }
   }
-  optionListChange(changeTxt:string,data:any){
+
+  optionListChange(changeTxt:string, data:any) {
     this.$set(data, 'optionName', changeTxt)
   }
+
   specListShow(index:number) {
     if (this.formdata.specList) {
       if (index === this.formdata.specList.length - 1 && this.formdata.specList.length === 1) { return SpecListShowType.add } else { return SpecListShowType.delete }
@@ -437,56 +448,58 @@ export default class extends Vue {
   private addOptionbox(parent:any) {
     parent.optionList.push(new OptionData())
   }
-  private deleteOptionbox(parent:any,specIndex:number,optionIndex:number) {
+
+  private deleteOptionbox(parent:any, specIndex:number, optionIndex:number) {
     parent.optionList.splice(optionIndex, 1)
-    this.fixSpecTableTempObject(specIndex,optionIndex)
+    this.fixSpecTableTempObject(specIndex, optionIndex)
   }
-  private fixSpecTableTempObject(specIndex:number,optionIndex:number){
+
+  private fixSpecTableTempObject(specIndex:number, optionIndex:number) {
     this.updateSpecTableIndexMapArr()
-    let deleteNoUseSpec = function(_this:any){
+    const deleteNoUseSpec = function(_this:any) {
       for (const key in _this.specTableTempObject) {
-        let keyArr = key.split(',')
-        if(keyArr[specIndex]===optionIndex.toString()){
+        const keyArr = key.split(',')
+        if (keyArr[specIndex] === optionIndex.toString()) {
           delete _this.specTableTempObject[key]
         }
       }
     }
-    let updateSpecTableTempObject = function(_this:any){
-      let newSpecTableTempObject:any = {}
+    const updateSpecTableTempObject = function(_this:any) {
+      const newSpecTableTempObject:any = {}
       let index = 0
       for (const key in _this.specTableTempObject) {
         newSpecTableTempObject[_this.specTableIndexMapArr[index].indexKey] = _this.specTableTempObject[key]
-        index++;
+        index++
       }
-      _this.specTableTempObject = Object.assign({},newSpecTableTempObject)
+      _this.specTableTempObject = Object.assign({}, newSpecTableTempObject)
     }
     deleteNoUseSpec(this)
     updateSpecTableTempObject(this)
   }
 
-  private lastRemoveOptionClass(isLast:boolean){
-    if(isLast)
-      return 'right'
-    else
-      return ''
+  private lastRemoveOptionClass(isLast:boolean) {
+    if (isLast) { return 'right' } else { return '' }
   }
 
-  getProdImage(imgName:string){
-    return process.env.VUE_APP_BASE_API+'product/image?name='+imgName
+  getProdImage(imgName:string) {
+    return process.env.VUE_APP_BASE_API + 'product/image?name=' + imgName
   }
-  /*封面圖片 */
+
+  /* 封面圖片 */
   private headImageUploadRemove(file:any, fileList:any) {
   	this.headImageFileList = [...fileList]
   }
+
   private headImageUploadChange(file:any, fileList:any) {
   	this.headImageFileList = [...fileList]
   }
+
   private headImageUploadCardPreview(file:any) {
   	this.dialogImageUrl = file.url
   	this.dialogVisible = true
   }
 
-  /*產品圖片 */
+  /* 產品圖片 */
   private prodUploadRemove(file:any, fileList:any) {
   	this.prodImageFileList = [...fileList]
   }
@@ -509,33 +522,35 @@ export default class extends Vue {
   		path: '/product/productList'
   	})
   }
-  uploadImage(file:any){
-    return new Promise<string>(resolve=>{
-      let formData = new FormData()
-      formData.append('file',file)
+
+  uploadImage(file:any) {
+    return new Promise<string>(resolve => {
+      const formData = new FormData()
+      formData.append('file', file)
       uploadProductPicture(formData).then((res:any) => {
         const resData:IQuploadProdImage = res
         resolve(resData.data.fileName)
       })
     })
   }
-  private uploadImageFromData(){
-    return new Promise<void>(async (resolve)=>{
-      /*封面圖*/
-      if(this.headImageFileList.length > 0){
-        let headImageData = this.headImageFileList[0]
-        //if:新圖 else:舊圖
-        if(headImageData.hasOwnProperty('raw')){
+
+  private uploadImageFromData() {
+    return new Promise<void>(async(resolve) => {
+      /* 封面圖 */
+      if (this.headImageFileList.length > 0) {
+        const headImageData = this.headImageFileList[0]
+        // if:新圖 else:舊圖
+        if (headImageData.hasOwnProperty('raw')) {
           headImageData.name = await this.uploadImage(headImageData.raw)
         }
       }
-      /*產品圖*/
-      //用foreach會有問題
-      if(this.prodImageFileList.length > 0){
+      /* 產品圖 */
+      // 用foreach會有問題
+      if (this.prodImageFileList.length > 0) {
         for (let i = 0; i < this.prodImageFileList.length; i++) {
-          const element = this.prodImageFileList[i];
-          //if:新圖 else:舊圖
-          if(element.hasOwnProperty('raw')){
+          const element = this.prodImageFileList[i]
+          // if:新圖 else:舊圖
+          if (element.hasOwnProperty('raw')) {
             element.name = await this.uploadImage(element.raw)
           }
         }
@@ -543,30 +558,32 @@ export default class extends Vue {
       resolve()
     })
   }
-  private getImgFileListName(fileList:Array<any>){
-    return fileList.map(item=>item.name).toString()
+
+  private getImgFileListName(fileList:Array<any>) {
+    return fileList.map(item => item.name).toString()
   }
+
   private async submitForm() {
-    let specArr:Array<IProdSpec> = []
+    const specArr:Array<IProdSpec> = []
     this.specTable.forEach(element => {
-      let data:IProdSpec = {
+      const data:IProdSpec = {
         firstSpec: '',
         secondSpec: '',
         price: 0,
         count: 0,
         number: ''
       }
-      if(element.hasOwnProperty(this.formdata.firstSpec)){
+      if (element.hasOwnProperty(this.formdata.firstSpec)) {
         data.firstSpec = element[this.formdata.firstSpec]
       }
-      if(element.hasOwnProperty(this.formdata.secondSpec)){
+      if (element.hasOwnProperty(this.formdata.secondSpec)) {
         data.secondSpec = element[this.formdata.secondSpec]
       }
       data.price = element.price
-      data.count = element.count      
+      data.count = element.count
       data.number = element.number
       specArr.push(data)
-    });
+    })
     await this.uploadImageFromData()
     switch (this.formMode) {
   	  case FormMode.create:
@@ -581,10 +598,10 @@ export default class extends Vue {
           price: parseInt(this.formdata.price),
           count: parseInt(this.formdata.count),
           number: this.formdata.number,
-          headImage:this.getImgFileListName(this.headImageFileList),
-          prodImages:this.getImgFileListName(this.prodImageFileList),
+          headImage: this.getImgFileListName(this.headImageFileList),
+          prodImages: this.getImgFileListName(this.prodImageFileList),
           status: this.formdata.status ? 1 : 0,
-          spec:specArr
+          spec: specArr
         }
         createProducts(createFormData).then((res:any) => {
           const resData:ISnoData = res
@@ -593,7 +610,7 @@ export default class extends Vue {
         break
   	  case FormMode.edit:
         const updateId:IQid = {
-          id:this.formdata.id
+          id: this.formdata.id
         }
         const updateFormData:IQupdateProduct = {
           name: this.formdata.name,
@@ -606,12 +623,12 @@ export default class extends Vue {
           price: parseInt(this.formdata.price),
           count: parseInt(this.formdata.count),
           number: this.formdata.number,
-          headImage:this.getImgFileListName(this.headImageFileList),
-          prodImages:this.getImgFileListName(this.prodImageFileList),
+          headImage: this.getImgFileListName(this.headImageFileList),
+          prodImages: this.getImgFileListName(this.prodImageFileList),
           status: this.formdata.status ? 1 : 0,
-          spec:specArr
+          spec: specArr
         }
-        updateProducts(updateFormData,updateId).then((res:any) => {
+        updateProducts(updateFormData, updateId).then((res:any) => {
           const resData:ISnoData = res
           this.BackToIndex(resData.success, resData.msg)
         })
